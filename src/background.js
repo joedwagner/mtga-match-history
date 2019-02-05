@@ -5,7 +5,10 @@ import {
   createProtocol,
   installVueDevtools
 } from 'vue-cli-plugin-electron-builder/lib'
+import PythonProcessManager from'./pythonProcessManager'
+
 const isDevelopment = process.env.NODE_ENV !== 'production'
+const pyManager = new PythonProcessManager()
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -57,6 +60,8 @@ app.on('ready', async () => {
     // Install Vue Devtools
     await installVueDevtools()
   }
+  // Start the Python server
+  pyManager.startPythonProcess()
   createWindow()
 })
 

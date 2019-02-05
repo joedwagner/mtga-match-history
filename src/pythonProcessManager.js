@@ -25,7 +25,8 @@ class PythonProcessManager {
       this.pythonProcess = child_process.execFile(pythonPath) // had path
     } else {
       // Otherwise run the terminal command 'python' with the script's path
-      this.pythonProcess = child_process.spawn('python', [pythonPath])
+      console.log('pythonPath: ' + pythonPath)
+      this.pythonProcess = child_process.spawn('py', [pythonPath])
     }
 
     // Output to console on success/failure of Python process spawn
@@ -74,7 +75,7 @@ const getPythonPath = () => {
   let pythonPath = null
   if (!isPackaged()) {
     // Not packaged - return the main .py file
-    pythonPath = path.join(__dirname, PYTHON_FOLDER, PYTHON_MODULE + '.py')
+    pythonPath = path.join(__dirname, '../src/', PYTHON_FOLDER, PYTHON_MODULE + '.py')
   } else if (process.platform === 'win32') {
     // Packaged and running Windows - return .exe
     pythonPath = path.join(__dirname, PYTHON_DIST_FOLDER, PYTHON_MODULE, PYTHON_MODULE + '.exe')
