@@ -25,7 +25,6 @@ class PythonProcessManager {
       this.pythonProcess = child_process.execFile(pythonPath) // had path
     } else {
       // Otherwise run the terminal command 'python' with the script's path
-      console.log('pythonPath: ' + pythonPath)
       this.pythonProcess = child_process.spawn('py', [pythonPath])
     }
 
@@ -61,7 +60,7 @@ made into environment variables as they are subject to change **/
 
 const PYTHON_DIST_FOLDER = 'pydist'
 const PYTHON_FOLDER = 'py'
-const PYTHON_MODULE = 'main' // without .py suffix
+const PYTHON_MODULE = 'server' // without .py suffix
 
 /** Function that checks if the Python code has been packaged by 
  looking for a dist folder **/
