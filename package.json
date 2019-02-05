@@ -11,7 +11,9 @@
     "postinstall": "electron-builder install-app-deps"
   },
   "dependencies": {
-    "vue": "^2.5.22"
+    "vue": "^2.5.22",
+    "zeromq": "^4.6.0",
+    "zerorpc": "git+https://github.com/fyears/zerorpc-node.git"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.4.0",
