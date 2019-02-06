@@ -1,9 +1,16 @@
 import zerorpc
+from db import DB
 
 class RPC(object):
-	def set_db_path(self, path):
-		return(path)
-
+	def init_db(self, path):
+		self.conn = DB(path)
+		return None
+	def get_all_matches(self):
+		# matches = 
+		return self.conn.get_all('matches')
+	def insert_many(self, number):
+		self.conn.insert_many(number)
+		return None
 def main():
 	# Start server using TCP on port 4242
 	server = zerorpc.Server(RPC()) 
