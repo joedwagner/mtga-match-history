@@ -1,17 +1,34 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <ul>
+      <li v-for="match in matches">{{ match.matchId }}</li>
+    </ul>
   </div>
 </template>
 
 <script>
-  import HelloWorld from './components/HelloWorld.vue'
+  // import HelloWorld from './components/HelloWorld.vue'
+  import ZerorpcClient from './zerorpcClient.js'
 
   export default {
     name: 'app',
     components: {
-      HelloWorld
+      // HelloWorld
+    },
+    data () {
+      return {
+        matches: null
+      }
+    },
+    created () {
+      const zClient = new ZerorpcClient()
+      zClient.getAllMatches((err, res) => {
+        if (err) {
+          console.log(err)
+        } else {
+          this.matches = res
+        }
+      })
     }
   }
 </script>

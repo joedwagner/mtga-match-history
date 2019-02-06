@@ -85,4 +85,4 @@ const getPythonPath = () => {
   return pythonPath
 }
 
-module.exports = PythonProcessManager;
+export default PythonProcessManager

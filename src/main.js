@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import App from './App.vue'
-require('./client.js')
 
 Vue.config.productionTip = false
 
