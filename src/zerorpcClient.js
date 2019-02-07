@@ -22,12 +22,13 @@ class ZerorpcClient {
   }
 
   getAllMatches(callback) {
-    this.client.invoke("get_all_matches"), (err, res) => {
-    if (err) {
-      callback(err, null)
-    } else {
-      callback(null, res)
-    }
+    this.client.invoke("get_all_matches", (err, res) => {
+      if (err) {
+        callback(err, null)
+      } else {
+        callback(null, res)
+      }
+    })
   }
 }
 
