@@ -23,9 +23,7 @@
     created () {
       const zClient = new ZerorpcClient()
       zClient.getAllMatches((err, res) => {
-        if (err) {
-          console.log(err)
-        } else {
+        if (!err) {
           this.matches = res
         }
       })

@@ -18,19 +18,16 @@ class ZerorpcClient {
   }
 
   initDB() {
-    this.client.invoke('init_db', app.getPath('userData'), (err, res) => {
-      return null
-    })
+    this.client.invoke('init_db', app.getPath('userData'));
   }
 
-  getAllMatches(cb) {
-    this.client.invoke("get_all_matches", (err, res) => {
-      if (err) {
-        cb(err, null)
-      } else {
-        cb(null, res)
-      }
-    })
+  getAllMatches(callback) {
+    this.client.invoke("get_all_matches"), (err, res) => {
+    if (err) {
+      callback(err, null)
+    } else {
+      callback(null, res)
+    }
   }
 }
 
