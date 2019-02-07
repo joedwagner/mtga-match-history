@@ -1,19 +1,22 @@
 <template>
   <div id="app">
+    <h1>Magic: The Gathering Arena</h1>
+    <h2>Match History Viewer</h2>
     <ul>
-      <li v-for="match in matches">{{ match.matchId }}</li>
+      <match v-for="match in matches" :match=match></match>
     </ul>
+
   </div>
 </template>
 
 <script>
-  // import HelloWorld from './components/HelloWorld.vue'
+  import Match from './components/Match.vue'
   import ZerorpcClient from './zerorpcClient.js'
 
   export default {
     name: 'app',
     components: {
-      // HelloWorld
+      Match
     },
     data () {
       return {
@@ -33,11 +36,9 @@
 
 <style>
   #app {
-    font-family: 'Avenir', Helvetica, Arial, sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
     text-align: center;
-    color: #2c3e50;
-    margin-top: 60px;
+  }
+  ul {
+    list-style-type: none;
   }
 </style>
