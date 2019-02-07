@@ -25,3 +25,6 @@ yarn-error.log*
 
 #Personal work todo
 joe-todo.txt
+
+#Python binary files
+*.pyc
