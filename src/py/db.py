@@ -3,7 +3,7 @@ from tinydb import TinyDB, Query
 class DB(object):
 	def __init__(self, path):
 		self.path = path
-		self.db = TinyDB(self.path + '/db_old.json')
+		self.db = TinyDB(self.path + '/db.json')
 		# self.tables = ['matches']
 		# for i in self.tables:
 		# 	self.db.table(i)

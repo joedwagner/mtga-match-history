@@ -5,7 +5,6 @@
     <ul>
       <match v-for="match in matches" :match=match></match>
     </ul>
-
   </div>
 </template>
 
@@ -35,10 +34,14 @@
 </script>
 
 <style>
+  @import url('https://fonts.googleapis.com/css?family=Montserrat');
   #app {
     text-align: center;
+    font-family: 'Montserrat', sans-serif;
   }
   ul {
     list-style-type: none;
+    width: 60%;
+    margin: 0 auto;
   }
 </style>
