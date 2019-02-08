@@ -1,19 +1,19 @@
 <template>
   <li class="match">
-    <div>
-      <p class="opponentHeader">{{ 'Match vs ' + match.opponent.displayName }}</p>
-      <p class="time">{{ match.timestamp | makeUTCReadable }}</p>
-      <p>{{ match.gameType }}</p>
-      <p>{{ match.result | capitalize }}</p>
-      <p>{{ 'Deck: ' + match.deckName }}</p>
-      <ul>
+      <p class="opponentHeader">{{ 'Match vs ' + match.opponent.displayName + ' - ' + match.gameType }}</p>
+      <p class="dateText">{{ match.timestamp | UTCto12HourTime }}</p>
+      <p v-bind:result="match.result.toLowerCase()" class="resultText">{{ match.result | capitalize }}</p>
+      <div class="deckDisplayBox">
+        <p>Deck</p>
+        <p> {{ match.deckName }}</p>
+      </div>
+      <ul v-show ="showGames"> 
         <li v-for="game in match.games">
           <p>Game {{ game.gameNumber }}</p>
           <p>{{ game. result }}</p>
           <p> {{ game.reason }}</p>
         </li>
       </ul>
-    </div>
   </li>
 </template>
 
@@ -26,6 +26,11 @@
         required: true  
       }
     },
+    data () {
+      return {
+        showGames: false
+      }
+    },
     filters: {
       uppercase(text) {
         return text.toUpperCase()
@@ -33,16 +38,25 @@
       capitalize(text) {
         return text.charAt(0).toUpperCase() + text.slice(1)
       },
-      makeUTCReadable(utcString) {
+      UTCto12HourTime(utcString) {
         let date = new Date(parseInt(utcString)*1000)
         let formattedDate = [date.getMonth()+1, date.getDate(), date.getFullYear()].join('/')
         let hours = date.getHours()
+        let mins = (date.getMinutes() < 10 ? '0' : '') + date.getMinutes(); 
         let amPM = ''
-        if (hours === 12) {
-
+        if (hours >= 12) {
+          amPM = 'PM'
+          if (hours > 12) {
+            hours -= 12
+          }
+        } else {
+          amPM = 'AM'
+          if (hours === 0) {
+            hours = 12
+          }
         }
 
-        let formattedTime = date.getHours() + ':' + date.getMinutes()
+        let formattedTime = hours + ':' + mins + ' ' + amPM
         return formattedDate + ' ' + formattedTime
       }
     }
@@ -58,13 +72,27 @@
     flex-direction: row;
     flex-wrap: wrap;
   }
-  .time {
-    width: 20%;
+  .dateText {
+    width: 30%;
+    text-align: right;
+    float: right;
   }
   .opponentHeader {
-    width: 80%;
+    width: 70%;
+    font-weight: bold;
   }
-  p {
-    display: inline-block;
+  .deckDisplayBox {
+    border: .5px solid black;
+    text-align: center;
+    float: right;
+  }
+  .resultText {
+    font-size: 1.5em;
+  }
+  [result=win] {
+    color: blue;
+  }
+  [result=loss] {
+    color: red;
   }
 </style>
