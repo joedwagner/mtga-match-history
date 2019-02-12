@@ -2,7 +2,12 @@
   <li class="match">
       <p class="opponentHeader">{{ 'Match vs ' + match.opponent.displayName + ' - ' + match.gameType }}</p>
       <p class="dateText">{{ match.timestamp | UTCto12HourTime }}</p>
-      <p v-bind:result="match.result.toLowerCase()" class="resultText">{{ match.result | capitalize }}</p>
+      <div class="matchBox">
+        <p>Match score: {{ gamesWon + '-' + gamesLost }}</p>
+      </div>
+      <div class="resultBox">
+        <p v-bind:result="match.result.toLowerCase()" class="resultText">{{ match.result | capitalize }}</p>
+      </div>
       <div class="deckDisplayBox">
         <p>Deck</p>
         <p> {{ match.deckName }}</p>
@@ -10,7 +15,7 @@
       <ul v-show ="showGames"> 
         <li v-for="game in match.games">
           <p>Game {{ game.gameNumber }}</p>
-          <p>{{ game. result }}</p>
+          <p>{{ game.result }}</p>
           <p> {{ game.reason }}</p>
         </li>
       </ul>
@@ -29,6 +34,14 @@
     data () {
       return {
         showGames: false
+      }
+    },
+    computed: {
+      gamesWon() {
+        return this.match.games.filter(g => g.result.toLowerCase() === 'win').length
+      },
+      gamesLost() {
+        return this.match.games.filter(g => g.result.toLowerCase() === 'loss').length
       }
     },
     filters: {
@@ -84,15 +97,23 @@
   .deckDisplayBox {
     border: .5px solid black;
     text-align: center;
-    float: right;
+    width: 30%;
+    font-size: 1em;
   }
   .resultText {
     font-size: 1.5em;
+    margin-right: auto;
   }
   [result=win] {
     color: blue;
   }
   [result=loss] {
     color: red;
+  }
+  .matchBox {
+    width: 30%;
+  }
+  .resultBox {
+    width: 30%;
   }
 </style>

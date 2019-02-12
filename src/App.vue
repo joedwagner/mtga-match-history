@@ -41,7 +41,8 @@
   }
   ul {
     list-style-type: none;
-    width: 60%;
-    margin: 0 auto;
+    width: 50%;
+    margin: 0 0;
+    border: 1px solid black;
   }
 </style>
