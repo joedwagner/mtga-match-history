@@ -2,21 +2,18 @@
   <li class="match">
       <p class="opponentHeader">{{ 'Match vs ' + match.opponent.displayName + ' - ' + match.gameType }}</p>
       <p class="dateText">{{ match.timestamp | UTCto12HourTime }}</p>
-      <div class="matchBox">
-        <p>Match score: {{ gamesWon + '-' + gamesLost }}</p>
-      </div>
       <div class="resultBox">
         <p v-bind:result="match.result.toLowerCase()" class="resultText">{{ match.result | capitalize }}</p>
+        <p>{{ gamesWon + ' - ' + gamesLost }}</p>
       </div>
       <div class="deckDisplayBox">
-        <p>Deck</p>
         <p> {{ match.deckName }}</p>
       </div>
       <ul v-show ="showGames"> 
         <li v-for="game in match.games">
           <p>Game {{ game.gameNumber }}</p>
           <p>{{ game.result }}</p>
-          <p> {{ game.reason }}</p>
+          <p>{{ game.reason }}</p>
         </li>
       </ul>
   </li>
@@ -79,11 +76,16 @@
 <style scoped>
   .match {
     text-align: left;
-    border: 1px solid black;
+    border-bottom: 1px solid rgba(144,238,144,.5);
     padding: 5px 10px 5px 10px;
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
+    color: rgba(255,255,255,.8);
+    background-color: #19181A;
+  }
+  .match:hover {
+    background-color: rgba(50, 48, 52, 1)
   }
   .dateText {
     width: 30%;
@@ -92,20 +94,21 @@
   }
   .opponentHeader {
     width: 70%;
-    font-weight: bold;
   }
   .deckDisplayBox {
-    border: .5px solid black;
     text-align: center;
     width: 30%;
     font-size: 1em;
+  }
+  .resultBox {
+    text-align: center;
   }
   .resultText {
     font-size: 1.5em;
     margin-right: auto;
   }
   [result=win] {
-    color: blue;
+    color: #479761  ;
   }
   [result=loss] {
     color: red;
