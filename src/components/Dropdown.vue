@@ -1,7 +1,10 @@
 <template>
-  <select>
-    <option v-for="option in options">{{ option }}</option>
-  </select>
+  <div>
+    <label>{{ label }}</label>
+    <select v-model="selectedOption" v-on:change="passFilter">
+      <option v-for="option in options">{{ option }}</option>
+    </select>
+  </div>
 </template>
 
 <script>
@@ -10,7 +13,28 @@
     props: {
       options: {
         type: Array,
-        required: true  
+        required: true
+      },
+      label: {
+        type: String,
+        required: false
+      }
+    },
+    data() {
+      return {
+        selectedOption: this.options[0]
+      }
+    },
+    methods: {
+      passFilter() {
+        let filter = {}
+        if (this.selectedOption === 'All') {
+          filter = null
+        } else {
+          filter.filterType = this.label.toLowerCase(),
+          filter.filterValue = this.selectedOption
+        }
+        this.$emit('filter-changed', filter)
       }
     }
   }

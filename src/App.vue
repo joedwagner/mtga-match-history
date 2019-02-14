@@ -7,15 +7,13 @@
       <div>
         <label for="dateFilter">Date</label><input id="dateFilter" type="date">
       </div>
-      <dropdown :options="['Play', 'Constructed', 'Ranked']"></dropdown>
-      <div>
-        <label for="deckFilter">Deck</label><input id="deckFilter">
-      </div>
+      <dropdown v-if="matches" :options=modeList :label=modeLabel v-on:filter-changed="filterMatches($event)"></dropdown>
+      <dropdown v-if="matches" :options=deckList :label=deckLabel v-on:filter-changed="filterMatches($event)"></dropdown>
     </div>
     <div class="matchListBox">
       <h2>Matches</h2>
-      <ul class="matchList">
-        <match v-for="match in matches" :match=match></match>
+      <ul class="matchList" v-if="matches">
+        <match v-for="match in filteredMatches" :match=match></match>
       </ul>
     </div>
     <div class="statBox">
@@ -39,7 +37,45 @@
     },
     data () {
       return {
-        matches: null
+        matches: null,
+        filteredMatches: null,
+        deckLabel: 'Deck',
+        modeLabel: 'Mode'
+      }
+    },
+    computed: {
+      deckList () {
+        let deckList = ['All']
+        this.matches.forEach((match) => {
+          if (!deckList.includes(match.deckName)) {
+            deckList.push(match.deckName)
+          }
+        })
+        return deckList 
+      },
+      modeList () {
+        let modeList = ['All']
+        this.matches.forEach((match) => {
+          if (!modeList.includes(match.gameType)) {
+            modeList.push(match.gameType)
+          }
+        })
+        return modeList
+      }
+    },
+    methods: {
+      filterMatches(filter) {
+        let filteredMatches = this.matches
+        if (!filter) {
+          this.filteredMatches=  filteredMatches
+        }
+        else if (filter.filterType === 'mode') {
+          this.filteredMatches = filteredMatches.filter((match) => match.gameType === filter.filterValue)
+        }
+        else if (filter.filterType === 'deck') {
+          console.log('tryna filter deck')
+          this.filteredMatches = filteredMatches.filter((match) => match.deckName === filter.filterValue)
+        }
       }
     },
     created () {
@@ -47,6 +83,7 @@
       zClient.getAllMatches((err, res) => {
         if (!err) {
           this.matches = res
+          this.filteredMatches = res
         }
       })
     }
