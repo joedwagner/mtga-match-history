@@ -85,7 +85,7 @@
     background-color: #19181A;
   }
   .match:hover {
-    background-color: rgba(50, 48, 52, 1)
+    background-color: rgba(50, 48, 52, 1);
   }
   .dateText {
     width: 30%;
