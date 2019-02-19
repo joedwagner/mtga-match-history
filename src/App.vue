@@ -4,16 +4,14 @@
       <h1>MTGA Match History Viewer</h1>
     </div>
     <div class="filtersBox">
-      <div>
-        <label for="dateFilter">Date</label><input id="dateFilter" type="date">
-      </div>
+      <dropdown v-if="matches" :options=timeframeList :label=timeframeLabel></dropdown>
       <dropdown v-if="matches" :options=modeList :label=modeLabel v-on:filter-changed="filterMatches($event)"></dropdown>
       <dropdown v-if="matches" :options=deckList :label=deckLabel v-on:filter-changed="filterMatches($event)"></dropdown>
     </div>
     <div class="matchListBox">
       <h2>Matches</h2>
       <ul class="matchList" v-if="matches">
-        <match v-for="match in filteredMatches" :match=match></match>
+        <match v-for="match in sortedFilteredMatches" :match=match></match>
       </ul>
     </div>
     <div class="statBox">
@@ -28,19 +26,23 @@
   import Match from './components/Match.vue'
   import Dropdown from './components/Dropdown.vue'
   import ZerorpcClient from './zerorpcClient.js'
+  import Datepicker from 'vuejs-datepicker'
 
   export default {
     name: 'app',
     components: {
       Match,
-      Dropdown
+      Dropdown,
+      Datepicker
     },
     data () {
       return {
         matches: null,
         filteredMatches: null,
         deckLabel: 'Deck',
-        modeLabel: 'Mode'
+        modeLabel: 'Mode',
+        timeframeLabel: 'Timeframe',
+        timeframeList: ['Today', 'This week', 'This month', 'This year', 'Custom range...']
       }
     },
     computed: {
@@ -61,6 +63,11 @@
           }
         })
         return modeList
+      },
+      sortedFilteredMatches () {
+        return this.filteredMatches.sort((a,b) => {
+          return b.timestamp - a.timestamp
+        })
       }
     },
     methods: {
@@ -105,7 +112,7 @@
   }
   .filtersBox {
     width: 80%;
-    margin: 20px;
+    margin: 40px;
     text-align: left;
     display: flex;
     flex-direction: row;
@@ -137,8 +144,8 @@
     margin: 0;
   }
   h1 {
-    margin-top: 0;
-    margin-bottom: 0;
+    margin-top: 20px;
+    margin-bottom: 20px;
     font-weight: lighter;
     font-size: 3em;
   }
@@ -151,5 +158,8 @@
   }
   .recentStats {
     padding: 10px;
+  }
+  .date-picker {
+    color: black;
   }
 </style>
