@@ -1,15 +1,11 @@
 <template>
-  <div>
-    <div class="label">{{ label + ':'}}</div>
-    <div class="optionBox">
-      <transition name="fade">
-        <div class="selectedOption" v-on:click="toggleActive" v-model="selectedOption" v-bind:active="active">{{ selectedOption }}<span class="down"></span></div>
-      </transition>
-      <transition-group name="fade">
-        <div class="option" v-if="active" v-bind:key="option" v-for="option in restOfOptions" v-on:click="selectOption">{{ option }}</div>
-      </transition-group>
-    </div>
-  </div>
+  <label>{{ label }}
+    <span class="thing">
+      <select>
+        <option v-for="option in options">{{ option }}</option>
+      </select>
+    </span>
+  </label>
 </template>
 
 <script>
@@ -59,47 +55,44 @@
 </script>
 
 <style scoped>
-/*  .down {
-    border: solid white;
-    border-width: 0 2px 2px 0;
+  .thing {
+    position: relative;
     display: inline-block;
-    padding: 5px;
-    transform: rotate(45deg);
-    margin-left: 5px;
-  }*/
-  .dropdown {
-    display: flex;
-    flex-direction: row;
+    vertical-align: middle; 
   }
-  .label {
-    margin-right: 5px;
-  }
-  .optionBox {
-    display:flex;
-    flex-direction: column;
-  }
-  .selectedOption:hover {
-    cursor: pointer;
-  }
-  .selectedOption {
-    text-decoration: underline;
-    text-align: center;
-  }
-  .option {
+  select {
+    -webkit-appearance: none;
+    border: 0;
+    padding: .5em;
+    padding-right: 2.5em;
+    font-size: .9em;
+    margin: 0;
     background-color: #19181A;
-    cursor: pointer;
-    border-bottom: 1px solid black;
-    text-align: center;
+    color: rgba(255,255,255,.9);
   }
-  .option:hover {
-    /*text-decoration: underline;*/
-    color: rgba(255,255,255,1);
-    background-color: rgba(50, 48, 52, 1)
+  .thing::before, .thing::after {
+    content: "";
+    position: absolute;
+    pointer-events: none;
   }
-  .fade-enter-active {
-    transition: opacity .5s;
+  .thing::after {
+    content: "\25BC";
+    height: 1em;
+    font-size: .625em;
+    line-height: 1;
+    right: 1.2em;
+    top: 50%; 
+    margin-top: -.5em;
   }
-  [active=true]{
+  .thing::before {
+    width: 2em;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    border-radius: 0 0px 0px 0;
     background-color: #19181A;
+  }
+  .thing:hover {
+    background-color: rgba(50, 48, 52, 1);
   }
 </style>

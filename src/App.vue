@@ -7,8 +7,8 @@
       <div>
         <label for="dateFilter">Date</label><input id="dateFilter" type="date">
       </div>
-      <dropdown class="dropdown" v-if="matches" :options=modeList :label=modeLabel v-on:filter-changed="filterMatches($event)"></dropdown>
-      <dropdown class="dropdown" v-if="matches" :options=deckList :label=deckLabel v-on:filter-changed="filterMatches($event)"></dropdown>
+      <dropdown v-if="matches" :options=modeList :label=modeLabel v-on:filter-changed="filterMatches($event)"></dropdown>
+      <dropdown v-if="matches" :options=deckList :label=deckLabel v-on:filter-changed="filterMatches($event)"></dropdown>
     </div>
     <div class="matchListBox">
       <h2>Matches</h2>
@@ -104,16 +104,13 @@
     justify-content: space-around;
   }
   .filtersBox {
-    width: 100%;
+    width: 80%;
     margin: 20px;
     text-align: left;
     display: flex;
     flex-direction: row;
     justify-content: space-around;
     color: rgba(255,255,255,.9);
-  }
-  .dropdown {
-    width: 20%;
   }
   .matchListBox {
     width: 40%;
