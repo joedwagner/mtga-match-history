@@ -4,9 +4,9 @@
       <h1>MTGA Match History Viewer</h1>
     </div>
     <div class="filtersBox">
-      <dropdown v-if="matches" :options=timeframeList :label=timeframeLabel></dropdown>
-      <dropdown v-if="matches" :options=modeList :label=modeLabel v-on:filter-changed="filterMatches($event)"></dropdown>
-      <dropdown v-if="matches" :options=deckList :label=deckLabel v-on:filter-changed="filterMatches($event)"></dropdown>
+      <dropdown v-if="matches" :options=timeframeList :label=timeframeLabel class="dropdown"></dropdown>
+      <multi-select-dropdown v-if="matches" :options=modeList :label=modeLabel class="dropdown"></multi-select-dropdown>
+      <multi-select-dropdown v-if="matches" :options=deckList :label=deckLabel class="dropdown"></multi-select-dropdown>
     </div>
     <div class="matchListBox">
       <h2>Matches</h2>
@@ -18,7 +18,6 @@
       <h2>Statistics</h2>
     </div>
     </div>
-    
   </div>
 </template>
 
@@ -27,36 +26,38 @@
   import Dropdown from './components/Dropdown.vue'
   import ZerorpcClient from './zerorpcClient.js'
   import Datepicker from 'vuejs-datepicker'
+  import MultiSelectDropdown from './components/MultiSelectDropdown.vue'
 
   export default {
     name: 'app',
     components: {
       Match,
       Dropdown,
-      Datepicker
+      Datepicker,
+      MultiSelectDropdown
     },
     data () {
       return {
         matches: null,
         filteredMatches: null,
-        deckLabel: 'Deck',
-        modeLabel: 'Mode',
+        deckLabel: 'Decks',
+        modeLabel: 'Modes',
         timeframeLabel: 'Timeframe',
         timeframeList: ['Today', 'This week', 'This month', 'This year', 'Custom range...']
       }
     },
     computed: {
       deckList () {
-        let deckList = ['All']
+        let deckList = {}
         this.matches.forEach((match) => {
-          if (!deckList.includes(match.deckName)) {
-            deckList.push(match.deckName)
+          if (!deckList.hasOwnProperty(match.deckId)) {
+            deckList[match.deckId] = {id: match.deckId, name: match.deckName}
           }
         })
-        return deckList 
+        return deckList
       },
       modeList () {
-        let modeList = ['All']
+        let modeList = []
         this.matches.forEach((match) => {
           if (!modeList.includes(match.gameType)) {
             modeList.push(match.gameType)
@@ -72,17 +73,7 @@
     },
     methods: {
       filterMatches(filter) {
-        let filteredMatches = this.matches
-        if (!filter) {
-          this.filteredMatches=  filteredMatches
-        }
-        else if (filter.filterType === 'mode') {
-          this.filteredMatches = filteredMatches.filter((match) => match.gameType === filter.filterValue)
-        }
-        else if (filter.filterType === 'deck') {
-          console.log('tryna filter deck')
-          this.filteredMatches = filteredMatches.filter((match) => match.deckName === filter.filterValue)
-        }
+        console.log(filter)
       }
     },
     created () {
@@ -109,6 +100,9 @@
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: space-around;
+  }
+  .dropdown {
+    width: 30%;
   }
   .filtersBox {
     width: 80%;

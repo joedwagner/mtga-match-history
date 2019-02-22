@@ -1,19 +1,28 @@
 <template>
-  <label>{{ label }}
-    <span class="thing">
-      <select>
-        <option v-for="option in options">{{ option }}</option>
-      </select>
-    </span>
-  </label>
+  <div class="d-container" v-click-outside="closeDropdown">
+        <div class="selectedOptionBox" v-on:click="toggleDropdown">
+          <span class="label">{{ label +':' }}</span>
+          <span class="selectedOption" v-model="selectedOption">{{ selectedOption }}</span>
+          <div v-bind:class="{upArrow: true, downArrow: dropdownOpen }"></div>
+        </div>
+        <div class="dropdown" v-show="dropdownOpen">
+          <ul>
+            <li class="listOption" v-for="option in options" v-on:click="selectedOption = option; closeDropdown()">{{ Array.isArray(options) ? option : option.name }}<div class="checkmark" v-show="selectedOption === option">&#x1F5F8;</div></li>
+        </ul>
+      </div>
+  </div>
 </template>
 
 <script>
+  import ClickOutside from 'vue-click-outside'
   export default {
     name: 'dropdown',
+    directives: {
+      ClickOutside
+    },
     props: {
       options: {
-        type: Array,
+        type: [Array, Object],
         required: true
       },
       label: {
@@ -24,75 +33,82 @@
     data() {
       return {
         selectedOption: this.options[0],
-        active: false
+        dropdownOpen: false
       }
     },
     computed: {
-      restOfOptions() {
-        return this.options.filter(option => option != this.selectedOption)
-      }
     },
     methods: {
-      selectOption(event) {
-        this.selectedOption = event.target.innerText;
-        this.active = false
+      toggleDropdown () {
+        this.dropdownOpen = !this.dropdownOpen
       },
-      passFilter() {
-        let filter = {}
-        if (this.selectedOption === 'All') {
-          filter = null
-        } else {
-          filter.filterType = this.label.toLowerCase(),
-          filter.filterValue = this.selectedOption
-        }
-        this.$emit('filter-changed', filter)
-      },
-      toggleActive() {
-        this.active = !this.active
+      closeDropdown () {
+        this.dropdownOpen = false
       }
     }
   }
 </script>
 
 <style scoped>
-  .thing {
+  .d-container {
     position: relative;
     display: inline-block;
-    vertical-align: middle; 
+    vertical-align: middle;
+    font-size: .9em
   }
-  select {
-    -webkit-appearance: none;
-    border: 0;
-    padding: .5em;
-    padding-right: 2.5em;
-    font-size: .9em;
-    margin: 0;
+  .selectedOptionBox {
     background-color: #19181A;
-    color: rgba(255,255,255,.9);
+    display: inline-block;
+    padding-top: .5em;
+    padding-bottom: .5em;
+    width: 100%;
   }
-  .thing::before, .thing::after {
-    content: "";
+  .upArrow {
+    width: 0;
+    border: 5px solid;
+    border-color: transparent;
+    border-top-color: white;
     position: absolute;
-    pointer-events: none;
+    right: 10px;
+    top: 1em;
   }
-  .thing::after {
-    content: "\25BC";
-    height: 1em;
-    font-size: .625em;
-    line-height: 1;
-    right: 1.2em;
-    top: 50%; 
-    margin-top: -.5em;
+  .downArrow {
+    border-top-color: transparent;
+    border-bottom-color: white;
+    top: .5em;
   }
-  .thing::before {
-    width: 2em;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    border-radius: 0 0px 0px 0;
+  .dropdown {
     background-color: #19181A;
   }
-  .thing:hover {
+  ul {
+    width: 100%;
+    list-style: none;
+    position: absolute;
+    z-index: 999;
+    display: flex;
+    flex-direction: column;
+    vertical-align: middle;
+    padding-left: 0;
+    margin: 0;
+    background-color: inherit;
+  }
+  ul > li {
+    display: block;
+    padding: .5em;
+  }
+  .listOption {
+    display: block;
+    padding: .5em;
+  }
+  ul > li:hover {
     background-color: rgba(50, 48, 52, 1);
+  }
+  .label {
+    padding: .5em;
+  }
+  .checkmark {
+    display: inline-block;
+    position: absolute;
+    right: 10px;
   }
 </style>
