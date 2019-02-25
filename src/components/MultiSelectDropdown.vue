@@ -80,6 +80,7 @@
     	},
     	clearSelected () {
     		this.selected = []
+    		this.$emit('update-filters', {type: this.label, filters: this.selected})
     	},
     	updateFilters () {
     		this.$emit('update-filters', {type: this.label, filters: this.selected})
