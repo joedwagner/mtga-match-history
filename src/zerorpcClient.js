@@ -30,6 +30,18 @@ class ZerorpcClient {
       }
     })
   }
+  // close() {
+  //   this.client.close()
+  // }
+  getMatches(filter, callback) {
+    this.client.invoke("get_matches", JSON.stringify(filter), (err, res) => {
+      if (err) {
+        callback(err, null)
+      } else {
+        callback(null, res)
+      }
+    })
+  }
 }
 
 export default ZerorpcClient

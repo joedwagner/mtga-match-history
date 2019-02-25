@@ -28,3 +28,9 @@ joe-todo.txt
 
 #Python binary files
 *.pyc
+
+#Python venv
+src/py/venv/*
+
+#Python test file
+src/py/test.py

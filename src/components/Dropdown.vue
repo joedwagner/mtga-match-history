@@ -1,13 +1,13 @@
 <template>
   <div class="d-container" v-click-outside="closeDropdown">
         <div class="selectedOptionBox" v-on:click="toggleDropdown">
-          <span class="label">{{ label +':' }}</span>
+          <span class="label">{{ capitalizedLabel +':' }}</span>
           <span class="selectedOption" v-model="selectedOption">{{ selectedOption }}</span>
           <div v-bind:class="{upArrow: true, downArrow: dropdownOpen }"></div>
         </div>
         <div class="dropdown" v-show="dropdownOpen">
           <ul>
-            <li class="listOption" v-for="option in options" v-on:click="selectedOption = option; closeDropdown()">{{ Array.isArray(options) ? option : option.name }}<div class="checkmark" v-show="selectedOption === option">&#x1F5F8;</div></li>
+            <li class="listOption" v-for="option in options" v-on:click="selectedOption = option; closeDropdown(); updateFilter()">{{ Array.isArray(options) ? option : option.name }}<div class="checkmark" v-show="selectedOption === option">&#x1F5F8;</div></li>
         </ul>
       </div>
   </div>
@@ -37,6 +37,9 @@
       }
     },
     computed: {
+      capitalizedLabel() {
+        return this.label.substring(0,1).toUpperCase() + this.label.slice(1) 
+      }
     },
     methods: {
       toggleDropdown () {
@@ -44,6 +47,9 @@
       },
       closeDropdown () {
         this.dropdownOpen = false
+      },
+      updateFilter() {
+        this.$emit('update-filter', {type: 'timeframe', filter: this.selectedOption})
       }
     }
   }

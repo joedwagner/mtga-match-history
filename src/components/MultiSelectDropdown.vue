@@ -1,13 +1,13 @@
 <template>
 	<div class="msd-container" v-click-outside="closeDropdown">
 	  	<div class="selectedOptionsBox" v-on:click="toggleDropdown">
-	  		<span class="label">{{ label +':' }}</span>
+	  		<span class="label">{{ capitalizedLabel +':' }}</span>
 	  		<span class="selectedOption" v-model="selectedOptionsText">{{ selectedOptionsText }}</span>
 	  		<div v-bind:class="{upArrow: true, downArrow: dropdownOpen }"></div>
 	  	</div>
 	  	<div class="dropdown" v-show="dropdownOpen">
 		  	<ul>
-		  		<li class="allOption" v-on:click="clearSelected">{{ 'All ' + label }}<div class="checkmark" v-show="selected.length === 0">&#x1F5F8;</div>
+		  		<li class="allOption" v-on:click="clearSelected">{{ 'All ' + capitalizedLabel }}<div class="checkmark" v-show="selected.length === 0">&#x1F5F8;</div>
 			    <li class="listOption" v-for="option in options" v-on:click="toggleSelect(option)">{{ Array.isArray(options) ? option : option.name }}<div class="checkmark" v-show="selected.includes(option)">&#x1F5F8;</div></li>
 			</ul>
 		</div>
@@ -41,7 +41,7 @@
     	selectedOptionsText () {
     		let text = ''
     		if (this.selected.length === 0 || this.selected.length === this.options.length) {
-    			text = 'All ' + this.label
+    			text = 'All ' + this.capitalizedLabel
     		} else {
     			if (!Array.isArray(this.options)) {
     				for (let s of this.selected) {
@@ -54,6 +54,9 @@
     			}
     		}
     		return text
+    	},
+    	capitalizedLabel() {
+    		return this.label.substring(0,1).toUpperCase() + this.label.slice(1) 
     	}
     },
     methods: {
@@ -73,9 +76,13 @@
     			let index = this.selected.indexOf(option)
     			this.selected.splice(index,1)
     		}
+  			this.updateFilters()
     	},
     	clearSelected () {
     		this.selected = []
+    	},
+    	updateFilters () {
+    		this.$emit('update-filters', {type: this.label, filters: this.selected})
     	}
     }
   }

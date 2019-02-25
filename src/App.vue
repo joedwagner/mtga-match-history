@@ -4,15 +4,16 @@
       <h1>MTGA Match History Viewer</h1>
     </div>
     <div class="filtersBox">
-      <dropdown v-if="matches" :options=timeframeList :label=timeframeLabel class="dropdown"></dropdown>
-      <multi-select-dropdown v-if="matches" :options=modeList :label=modeLabel class="dropdown"></multi-select-dropdown>
-      <multi-select-dropdown v-if="matches" :options=deckList :label=deckLabel class="dropdown"></multi-select-dropdown>
+      <dropdown v-if="matches" :options=timeframeList :label=timeframeLabel class="dropdown" v-on:update-filter="updateFilters"></dropdown>
+      <multi-select-dropdown v-if="matches" :options=modeList :label=modeLabel class="dropdown" v-on:update-filters="updateFilters"></multi-select-dropdown>
+      <multi-select-dropdown v-if="matches" :options=deckList :label=deckLabel class="dropdown" v-on:update-filters="updateFilters"></multi-select-dropdown>
     </div>
     <div class="matchListBox">
       <h2>Matches</h2>
       <ul class="matchList" v-if="matches">
         <match v-for="match in sortedFilteredMatches" :match=match></match>
       </ul>
+      <p class="noMatches" v-if="!(sortedFilteredMatches.length > 0)">Sorry, no matches were found. :(<br>Try again using less filters</p>
     </div>
     <div class="statBox">
       <h2>Statistics</h2>
@@ -40,10 +41,15 @@
       return {
         matches: null,
         filteredMatches: null,
-        deckLabel: 'Decks',
-        modeLabel: 'Modes',
-        timeframeLabel: 'Timeframe',
-        timeframeList: ['Today', 'This week', 'This month', 'This year', 'Custom range...']
+        deckLabel: 'decks',
+        modeLabel: 'modes',
+        timeframeLabel: 'timeframe',
+        timeframeList: ['All Time', 'Today', '7 Days', '30 Days', '365 Days'],
+        filters: {
+          decks: null,
+          modes: null,
+          timeframe: null
+        }
       }
     },
     computed: {
@@ -66,22 +72,98 @@
         return modeList
       },
       sortedFilteredMatches () {
-        return this.filteredMatches.sort((a,b) => {
+        if (!this.filteredMatches) {
+          return this.matches
+        } else {
+          return this.filteredMatches.sort((a,b) => {
           return b.timestamp - a.timestamp
-        })
+        })  
+        }
       }
     },
     methods: {
-      filterMatches(filter) {
-        console.log(filter)
-      }
+      updateFilters(filter) {
+          switch (filter.type) {
+            case 'modes':
+              if (filter.filters.length === 0) {
+                this.filters[filter.type] = this.modeList
+              } else {
+                this.filters[filter.type] = filter.filters 
+              }
+              break;
+            case 'decks':
+              if (filter.filters.length === 0) {
+                this.filters[filter.type] = Object.keys(this.deckList)
+              } else {
+                let deckIds = []
+                filter.filters.forEach((deck) => {
+                  deckIds.push(deck.id)
+                })
+                this.filters[filter.type] = deckIds 
+              }
+              break;
+            case 'timeframe':
+              this.filters[filter.type] = this.getStartEndTimeframeFromText(filter.filter)
+          }
+        },
+        getStartEndTimeframeFromText(timeframeText) {
+            let date = new Date()
+            let timeframeObj = {}
+          switch(timeframeText) {
+            case 'All Time':
+              timeframeObj.startTime = Date.parse(new Date(1970, 0, 1))
+              timeframeObj.endTime = Date.now()
+              break;
+            case 'Today':
+              timeframeObj.startTime = Date.parse(new Date(date.getFullYear(), date.getMonth(), date.getDate()))
+              timeframeObj.endTime = Date.now()
+              break;
+            case '7 Days':
+              timeframeObj.startTime = Date.parse(new Date(date.getFullYear(), date.getMonth(), date.getDate()-6))
+              timeframeObj.endTime = Date.now()
+              break;
+            case '30 Days':
+              timeframeObj.startTime = Date.parse(new Date(date.getFullYear(), date.getMonth(), date.getDate()-30))
+              timeframeObj.endTime = Date.now()
+              break;
+            case '365 Days':
+              timeframeObj.startTime = Date.parse(new Date(date.getFullYear(), date.getMonth(), date.getDate()-365))
+              timeframeObj.endTime = Date.now()
+              break;
+          }
+          timeframeObj.startTime /= 1000
+          timeframeObj.endTime /= 1000
+          return timeframeObj
+        },
+        sendFilters() {
+          const zClient = new ZerorpcClient();
+          zClient.getMatches(this.filters, (err, res) => {
+            if (!err) {
+              this.filteredMatches = res
+            }
+          })
+        }
+    },
+    watch: {
+        'filters.timeframe': function() {
+          this.sendFilters()
+        },
+        'filters.modes': function() {
+          this.sendFilters()
+        },
+        'filters.decks': function() {
+          this.sendFilters()
+        }
     },
     created () {
       const zClient = new ZerorpcClient()
       zClient.getAllMatches((err, res) => {
-        if (!err) {
+          if (!err) {
           this.matches = res
           this.filteredMatches = res
+          this.filters.decks = Object.keys(this.deckList)
+          this.filters.modes = this.modeList
+          this.filters.timeframe = this.getStartEndTimeframeFromText('All Time')
         }
       })
     }
