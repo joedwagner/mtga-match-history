@@ -2,7 +2,7 @@
   <div class="d-container" v-click-outside="closeDropdown">
         <div class="selectedOptionBox" v-on:click="toggleDropdown">
           <span class="label">{{ capitalizedLabel +':' }}</span>
-          <span class="selectedOption" v-model="selectedOption">{{ selectedOption }}</span>
+          <span class="selectedOption">{{ selectedOption }}</span>
           <div v-bind:class="{upArrow: true, downArrow: dropdownOpen }"></div>
         </div>
         <div class="dropdown" v-show="dropdownOpen">
