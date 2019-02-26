@@ -11,13 +11,12 @@
     <div class="matchListBox">
       <h2>Matches</h2>
       <ul class="matchList" v-if="matches">
-        <match v-for="match in sortedFilteredMatches" :match=match></match>
+        <match v-for="match in sortedFilteredMatches" :key=match.matchId :match=match></match>
       </ul>
-      <p class="noMatches" v-if="!(sortedFilteredMatches.length > 0)">Sorry, no matches were found. :(<br>Try again using less filters</p>
+      <p class="noMatches" v-if="(sortedFilteredMatches) && (sortedFilteredMatches.length === 0)">Sorry, no matches were found. :(<br>Try again using different search criteria.</p>
     </div>
     <div class="statBox">
       <h2>Statistics</h2>
-    </div>
     </div>
   </div>
 </template>
@@ -26,7 +25,7 @@
   import Match from './components/Match.vue'
   import Dropdown from './components/Dropdown.vue'
   import ZerorpcClient from './zerorpcClient.js'
-  import Datepicker from 'vuejs-datepicker'
+  // import Datepicker from 'vuejs-datepicker'
   import MultiSelectDropdown from './components/MultiSelectDropdown.vue'
 
   export default {
@@ -34,7 +33,7 @@
     components: {
       Match,
       Dropdown,
-      Datepicker,
+      // Datepicker,
       MultiSelectDropdown
     },
     data () {
@@ -75,9 +74,9 @@
         if (!this.filteredMatches) {
           return this.matches
         } else {
-          return this.filteredMatches.sort((a,b) => {
-          return b.timestamp - a.timestamp
-        })  
+          return this.filteredMatches.slice(0).sort((a,b) => {
+            return b.timestamp - a.timestamp
+        })
         }
       }
     },
