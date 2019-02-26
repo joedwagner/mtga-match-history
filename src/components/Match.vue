@@ -10,7 +10,7 @@
         <p> {{ match.deckName }}</p>
       </div>
       <ul v-show ="showGames"> 
-        <li v-for="game in match.games">
+        <li v-for="game in match.games" v-bind:key="game.gameNumber">
           <p>Game {{ game.gameNumber }}</p>
           <p>{{ game.result }}</p>
           <p>{{ game.reason }}</p>
