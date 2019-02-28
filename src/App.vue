@@ -145,37 +145,8 @@
               }
               break;
             case 'timeframe':
-              this.filters[filter.type] = this.getStartEndTimeframeFromText(filter.filter)
+              this.filters[filter.type] = filter.filter
           }
-        },
-        getStartEndTimeframeFromText(timeframeText) {
-            let date = new Date()
-            let timeframeObj = {}
-          switch(timeframeText) {
-            case 'All Time':
-              timeframeObj.startTime = Date.parse(new Date(1970, 0, 1))
-              timeframeObj.endTime = Date.now()
-              break;
-            case 'Today':
-              timeframeObj.startTime = Date.parse(new Date(date.getFullYear(), date.getMonth(), date.getDate()))
-              timeframeObj.endTime = Date.now()
-              break;
-            case '7 Days':
-              timeframeObj.startTime = Date.parse(new Date(date.getFullYear(), date.getMonth(), date.getDate()-6))
-              timeframeObj.endTime = Date.now()
-              break;
-            case '30 Days':
-              timeframeObj.startTime = Date.parse(new Date(date.getFullYear(), date.getMonth(), date.getDate()-30))
-              timeframeObj.endTime = Date.now()
-              break;
-            case '365 Days':
-              timeframeObj.startTime = Date.parse(new Date(date.getFullYear(), date.getMonth(), date.getDate()-365))
-              timeframeObj.endTime = Date.now()
-              break;
-          }
-          timeframeObj.startTime /= 1000
-          timeframeObj.endTime /= 1000
-          return timeframeObj
         },
         sendFilters() {
           const zClient = new ZerorpcClient();
@@ -188,8 +159,8 @@
         updateTimeframeFilter () {
           if (this.dateStart && this.dateEnd) {
             this.filters.timeframe = {
-              start: null,
-              end: null
+              start: this.dateEnd.toLocaleDateString(),
+              end: this.dateEnd.toLocaleDateString()
             }
           }
         }
@@ -213,7 +184,7 @@
           this.filteredMatches = res
           this.filters.decks = Object.keys(this.deckList)
           this.filters.modes = this.modeList
-          this.filters.timeframe = this.getStartEndTimeframeFromText('All Time')
+          this.filters.timeframe = 'All Time'
         }
       })
     }
