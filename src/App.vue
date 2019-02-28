@@ -4,9 +4,37 @@
       <h1>MTGA Match History Viewer</h1>
     </div>
     <div class="filtersBox">
-      <dropdown v-if="matches" :options=timeframeList :label=timeframeLabel class="dropdown" v-on:update-filter="updateFilters"></dropdown>
-      <multi-select-dropdown v-if="matches" :options=modeList :label=modeLabel class="dropdown" v-on:update-filters="updateFilters"></multi-select-dropdown>
-      <multi-select-dropdown v-if="matches" :options=deckList :label=deckLabel class="dropdown" v-on:update-filters="updateFilters"></multi-select-dropdown>
+      <dropdown 
+        class="dropdown"
+        v-if="matches"
+        :options=timeframeList
+        :label=timeframeLabel
+        :custom=timeframeCustom
+        @update-filter="updateFilters" 
+        @custom-selected="showDatePickerBox = true"
+        @custom-deselected="showDatePickerBox = false">
+      </dropdown>
+      <multi-select-dropdown
+        class="dropdown"
+        v-if="matches"
+        :options=modeList
+        :label=modeLabel
+        @update-filters="updateFilters">
+      </multi-select-dropdown>
+      <multi-select-dropdown
+        class="dropdown"
+        v-if="matches"
+        :options=deckList
+        :label=deckLabel
+        @update-filters="updateFilters">
+      </multi-select-dropdown>
+      <div 
+        class="date-picker-box"
+        v-show="showDatePickerBox">
+        <datepicker placeholder="Start date" v-model="dateStart" :disabledDates="disabledStartDates" v-on:input="updateTimeframeFilter"></datepicker>
+        <span>to</span>
+        <datepicker placeholder="End date" v-model="dateEnd" :disabledDates="disabledEndDates" v-on:input="updateTimeframeFilter"></datepicker>
+      </div>
     </div>
     <div class="matchListBox">
       <h2>Matches</h2>
@@ -25,7 +53,7 @@
   import Match from './components/Match.vue'
   import Dropdown from './components/Dropdown.vue'
   import ZerorpcClient from './zerorpcClient.js'
-  // import Datepicker from 'vuejs-datepicker'
+  import Datepicker from 'vuejs-datepicker'
   import MultiSelectDropdown from './components/MultiSelectDropdown.vue'
 
   export default {
@@ -33,7 +61,7 @@
     components: {
       Match,
       Dropdown,
-      // Datepicker,
+      Datepicker,
       MultiSelectDropdown
     },
     data () {
@@ -43,12 +71,16 @@
         deckLabel: 'decks',
         modeLabel: 'modes',
         timeframeLabel: 'timeframe',
-        timeframeList: ['All Time', 'Today', '7 Days', '30 Days', '365 Days'],
+        timeframeList: ['All Time', 'Today', 'Yesterday', '7 Days', '30 Days', '365 Days'],
+        timeframeCustom: 'Custom Range',
         filters: {
           decks: null,
           modes: null,
           timeframe: null
-        }
+        },
+        showDatePickerBox: false,
+        dateStart: null,
+        dateEnd: null
       }
     },
     computed: {
@@ -77,6 +109,17 @@
           return this.filteredMatches.slice(0).sort((a,b) => {
             return b.timestamp - a.timestamp
         })
+        }
+      },
+      disabledStartDates () {
+        return {
+          from: this.dateEnd ? this.dateEnd : new Date()
+        }
+      },
+      disabledEndDates () {
+        return {
+          to: this.dateStart ? this.dateStart : new Date(1970, 0, 1),
+          from: new Date()
         }
       }
     },
@@ -141,6 +184,14 @@
               this.filteredMatches = res
             }
           })
+        },
+        updateTimeframeFilter () {
+          if (this.dateStart && this.dateEnd) {
+            this.filters.timeframe = {
+              start: null,
+              end: null
+            }
+          }
         }
     },
     watch: {
@@ -185,6 +236,47 @@
   .dropdown {
     width: 30%;
   }
+  /* Datepicker Styles */
+  .date-picker-box {
+    width: 100%;
+    padding-left: 1em;
+    padding-top:.5em; 
+    font-size: .9em;
+  }
+  .vdp-datepicker {
+    padding: .5em;
+    display: inline-block;
+  }
+  .vdp-datepicker input {
+    border: none;
+    background-color: #19181A;
+    padding: .5em;
+    cursor: pointer;
+    width: 100px;
+    font-family: inherit;
+    color: rgba(255,255,255,.8);
+    text-align: center;
+    border-radius: 5px;
+  }
+  .vdp-datepicker input:hover {
+    color: #aaa;
+  }
+  .vdp-datepicker__calendar {
+    background-color: #080808;   
+    color: rgba(255,255,255,.9);
+  }
+  .vdp-datepicker__calendar header .next:after {
+    border-left-color: rgba(255,255,255,.9);
+  }
+  .vdp-datepicker__calendar header .next.disabled:after {
+    border: none;
+  }
+  .vdp-datepicker__calendar header .prev:after {
+    border-right-color: rgba(255,255,255,.9);
+  }
+  .vdp-datepicker__calendar header .prev.disabled:after {
+    border: none;
+  }
   .filtersBox {
     width: 80%;
     margin: 40px;
@@ -192,6 +284,7 @@
     display: flex;
     flex-direction: row;
     justify-content: space-around;
+    flex-wrap: wrap;
     color: rgba(255,255,255,.9);
   }
   .matchListBox {
