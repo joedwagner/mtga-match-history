@@ -259,8 +259,8 @@
     color: rgba(255,255,255,.9);
   }
   .matchListBox {
-    width: 40%;
-    padding: 15px
+    width: 60%;
+    padding-left: 10%;
   }
   .matchList {
     list-style-type: none;
@@ -268,10 +268,13 @@
     border: 1px solid rgba(144,238,144,1);
     margin: 20px 15px 20px 15px;
     padding: 0;
+    height: 60%;
+    max-height: 650px;
+    overflow-y: scroll;
   }
   .statBox {
-    width: 40%;
-    padding: 15px;
+    width: 20%;
+    padding-right: 10%;
   }
   .header {
     background-color: #080808;
