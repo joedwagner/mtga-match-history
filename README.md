@@ -1,29 +1,9 @@
-# mtga-project-vue
-
-## Project setup
-```
-npm install
-```
-
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
-
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Run your tests
-```
-npm run test
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+python2 installed - know path  
+python3 installed - set in path variable  
+    
+clone the repo  
+cd into repo  
+npm config set python path\to\python2  
+npm install  
+pip install -r requirements.txt  
+npm run e:dev  
