@@ -15,7 +15,9 @@ class RPC(object):
 		return None
 
 	def get_matches(self, match_filter):
-		return self.conn.get('matches', match_filter)
+		res = self.conn.get_matches(match_filter)
+		print(res)
+		return res
 
 
 def main():
