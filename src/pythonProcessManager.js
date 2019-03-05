@@ -25,7 +25,7 @@ class PythonProcessManager {
       this.pythonProcess = child_process.execFile(pythonPath) // had path
     } else {
       // Otherwise run the terminal command 'python' with the script's path
-      this.pythonProcess = child_process.spawn('py', [pythonPath])
+      this.pythonProcess = child_process.spawn('python', [pythonPath])
     }
 
     // Output to console on success/failure of Python process spawn
