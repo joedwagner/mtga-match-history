@@ -18,14 +18,15 @@ class PythonProcessManager {
     this.pythonServerPort = 4242
   }
 
-  startPythonProcess () {
-    let pythonPath = getPythonPath()
+  startPythonProcess (filename) {
+    let pythonPath = getPythonPath(filename)
+    console.log(pythonPath)
     if (isPackaged()) {
       // If Python is packaged, just run the executable
       this.pythonProcess = child_process.execFile(pythonPath) // had path
     } else {
       // Otherwise run the terminal command 'python' with the script's path
-      this.pythonProcess = child_process.spawn('py', [pythonPath])
+      this.pythonProcess = child_process.spawn('python', [pythonPath])
     }
 
     // Output to console on success/failure of Python process spawn
@@ -34,6 +35,9 @@ class PythonProcessManager {
     } else {
       console.log('Error! Python process failed to start :(')
     }
+
+    
+
   }
 
   stopPythonProcess () {
@@ -70,17 +74,17 @@ const isPackaged = () => {
 
 /** Function that returns the full path of the 
 Python script/.exe/module to be executed **/
-const getPythonPath = () => {
+const getPythonPath = (filename) => {
   let pythonPath = null
   if (!isPackaged()) {
     // Not packaged - return the main .py file
-    pythonPath = path.join(__dirname, '../src/', PYTHON_FOLDER, PYTHON_MODULE + '.py')
+    pythonPath = path.join(__dirname, '../src/', PYTHON_FOLDER, filename + '.py')
   } else if (process.platform === 'win32') {
     // Packaged and running Windows - return .exe
-    pythonPath = path.join(__dirname, PYTHON_DIST_FOLDER, PYTHON_MODULE, PYTHON_MODULE + '.exe')
+    pythonPath = path.join(__dirname, PYTHON_DIST_FOLDER, filename, filename + '.exe')
   } else {
     // Packaged and running anything else - return Python module
-    pythonPath = path.join(__dirname, PYTHON_DIST_FOLDER, PYTHON_MODULE, PYTHON_MODULE)
+    pythonPath = path.join(__dirname, PYTHON_DIST_FOLDER, filename, filename)
   }
   return pythonPath
 }

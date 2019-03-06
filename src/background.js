@@ -67,7 +67,8 @@ app.on('ready', async () => {
     await installVueDevtools()
   }
   // Start the Python server
-  pyManager.startPythonProcess()
+  pyManager.startPythonProcess('server')
+  pyManager.startPythonProcess('heimdall')
   createWindow()
 })
 

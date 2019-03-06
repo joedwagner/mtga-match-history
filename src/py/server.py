@@ -1,5 +1,6 @@
 import zerorpc
 from db import DB
+from heimdall import Watcher
 
 
 class RPC(object):

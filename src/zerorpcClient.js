@@ -36,6 +36,7 @@ class ZerorpcClient {
   getMatches(filter, callback) {
     this.client.invoke("get_matches", JSON.stringify(filter), (err, res) => {
       if (err) {
+        console.log(err)
         callback(err, null)
       } else {
         callback(null, res)

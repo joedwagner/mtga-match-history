@@ -152,7 +152,7 @@
           const zClient = new ZerorpcClient();
           zClient.getMatches(this.filters, (err, res) => {
             if (!err) {
-              this.filteredMatches = res
+              this.filteredMatches = res.matches
             }
           })
         },

@@ -13,9 +13,11 @@ class DB(object):
 	def get_all(self, table):
 		return self.db.table(table).all()
 
-	def get_matches(self, filters):
+	def get_matches(self, in_filters):
 		query = Query()
     
+		filters = json.loads(in_filters)
+
 		matches = self.db.table('matches')
 		gametypes = filters['modes']
 		decks = filters['decks']
@@ -34,6 +36,8 @@ class DB(object):
 			timePeriodStart = int((datetime.combine(datetime.today(), time.min)-timedelta(days=30)).astimezone(get_localzone()).astimezone(pytz.utc).timestamp())
 		elif filters['timeframe']=='This Month':
 			timePeriodStart = int(datetime(datetime.today().year,datetime.today().month,1,0,0).astimezone(get_localzone()).astimezone(pytz.utc).timestamp())
+		elif filters['timeframe']=='365 Days':
+			timePeriodStart = int((datetime.combine(datetime.today(), time.min)-timedelta(days=365)).astimezone(get_localzone()).astimezone(pytz.utc).timestamp())
 		elif filters['timeframe']=='This Year':
 			timePeriodStart = int(datetime(datetime.today().year,1,1,0,0).astimezone(get_localzone()).astimezone(pytz.utc).timestamp())
 		elif filters['timeframe']=='Custom':
@@ -67,12 +71,13 @@ class DB(object):
 					gWinCount += 1
 			
 				gCount += 1
-		stats = dict()    
-		stats['matchWinPct'] = (mWinCount/len(mDict))*100
-		stats['gameWinPct'] = (gWinCount/gCount)*100
-		
-		stats['matchAvgTime'] = sum(mTimeList)/len(mTimeList)
-		stats['gameAvgTime'] = sum(gTimeList)/len(gTimeList)
+		stats = dict()
+		if not len(mDict)==0:
+			stats['matchWinPct'] = (mWinCount/len(mDict))*100
+			stats['gameWinPct'] = (gWinCount/gCount)*100
+			
+			stats['matchAvgTime'] = sum(mTimeList)/len(mTimeList)
+			stats['gameAvgTime'] = sum(gTimeList)/len(gTimeList)
 
 		output = dict([('stats',stats),('matches',mDict)])
 
