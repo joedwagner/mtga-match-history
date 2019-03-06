@@ -38,10 +38,10 @@
     </div>
     <div class="matchListBox">
       <h2>Matches</h2>
-      <ul class="matchList" v-if="matches">
+      <ul class="matchList" v-if="sortedFilteredMatches.length > 0">
         <match v-for="match in sortedFilteredMatches" :key=match.matchId :match=match></match>
       </ul>
-      <p class="noMatches" v-if="(sortedFilteredMatches) && (sortedFilteredMatches.length === 0)">Sorry, no matches were found. :(<br>Try again using different search criteria.</p>
+      <p class="noMatches" v-if="(sortedFilteredMatches) && (sortedFilteredMatches.length === 0)">Sorry, no matches were found. :(<br><br>Try again using different search criteria.</p>
     </div>
     <div class="statBox">
       <h2>Statistics</h2>
@@ -203,6 +203,7 @@
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: space-around;
+    height: 100vh;
   }
   .dropdown {
     width: 30%;
@@ -261,6 +262,7 @@
   .matchListBox {
     width: 60%;
     padding-left: 10%;
+    height: 80vh;
   }
   .matchList {
     list-style-type: none;
