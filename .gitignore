@@ -32,5 +32,7 @@ joe-todo.txt
 #Python venv
 src/py/venv/*
 
-#Python test file
+#Python test files
 src/py/test.py
+output.txt
+matches.json
