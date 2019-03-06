@@ -270,8 +270,7 @@
     border: 1px solid rgba(144,238,144,1);
     margin: 20px 15px 20px 15px;
     padding: 0;
-    height: 60%;
-    max-height: 650px;
+    max-height: 55vh;
     overflow-y: scroll;
   }
   .statBox {
