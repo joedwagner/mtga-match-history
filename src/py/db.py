@@ -13,7 +13,10 @@ class DB(object):
 	def get_all(self, table):
 		return self.db.table(table).all()
 
-	def get_matches(self, filters):
+	def get_matches(self, in_filters):
+
+		filters = json.loads(in_filters)
+
 		query = Query()
     
 		matches = self.db.table('matches')

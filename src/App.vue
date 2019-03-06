@@ -71,7 +71,7 @@
         deckLabel: 'decks',
         modeLabel: 'modes',
         timeframeLabel: 'timeframe',
-        timeframeList: ['All Time', 'Today', 'Yesterday', '7 Days', '30 Days', '365 Days'],
+        timeframeList: ['All Time', 'Today', '7 Days', '30 Days', 'This Week', 'This Month', 'This Year'],
         timeframeCustom: 'Custom Range',
         filters: {
           decks: null,
@@ -152,7 +152,7 @@
           const zClient = new ZerorpcClient();
           zClient.getMatches(this.filters, (err, res) => {
             if (!err) {
-              this.filteredMatches = res
+              this.filteredMatches = res.matches
             }
           })
         },
