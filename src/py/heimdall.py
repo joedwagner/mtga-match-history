@@ -38,6 +38,7 @@ class Handler(FileSystemEventHandler):
     def on_any_event(event):
         if event.event_type == 'modified':
             if os.path.basename(event.src_path)=='output_log.txt':
+                print('Something changed.', flush=True)
                 f = open('output.txt', 'w+')
                 start = datetime.now().timestamp()
                 f.write('retrieving\n')

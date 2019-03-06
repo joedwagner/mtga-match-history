@@ -20,13 +20,18 @@ class PythonProcessManager {
 
   startPythonProcess (filename) {
     let pythonPath = getPythonPath(filename)
-    console.log(pythonPath)
     if (isPackaged()) {
       // If Python is packaged, just run the executable
       this.pythonProcess = child_process.execFile(pythonPath) // had path
     } else {
       // Otherwise run the terminal command 'python' with the script's path
       this.pythonProcess = child_process.spawn('python', [pythonPath])
+      this.pythonProcess.on('error', (err) => {
+        console.log(err)
+      })
+      this.pythonProcess.stdout.on('data', (data) => {
+        console.log(data.toString('utf8'))
+      })
     }
 
     // Output to console on success/failure of Python process spawn
@@ -35,8 +40,6 @@ class PythonProcessManager {
     } else {
       console.log('Error! Python process failed to start :(')
     }
-
-    
 
   }
 
