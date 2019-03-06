@@ -86,11 +86,6 @@ class DB(object):
 			
 		return output
 
-	def insert_many(self, num):
-		for i in range(num):
-			self.db.table('matches').insert({'result': 'win'})
-		return null
-
 	def all(self):
 		return self.db.all()
 
