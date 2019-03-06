@@ -107,7 +107,7 @@
           return this.matches
         } else {
           return this.filteredMatches.slice(0).sort((a,b) => {
-            return b.timestamp - a.timestamp
+            return b.timestampEnd - a.timestampEnd
         })
         }
       },

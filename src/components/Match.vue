@@ -1,7 +1,7 @@
 <template>
   <li class="match">
       <p class="opponentHeader">{{ 'Match vs ' + match.opponent.displayName + ' - ' + match.gameType }}</p>
-      <p class="dateText">{{ match.timestamp | UTCto12HourTime }}</p>
+      <p class="dateText">{{ match.timestampEnd | UTCto12HourTime }}</p>
       <div class="resultBox">
         <p v-bind:result="match.result.toLowerCase()" class="resultText">{{ match.result | capitalize }}</p>
         <p>{{ gamesWon + ' - ' + gamesLost }}</p>
