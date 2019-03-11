@@ -36,21 +36,21 @@
         <datepicker placeholder="End date" v-model="dateEnd" :disabledDates="disabledEndDates" v-on:input="updateTimeframeFilter"></datepicker>
       </div>
     </div>
+    <div class="statsBox">
+      <!-- <h2>Statistics</h2> -->
+      <div v-if="stats">
+        <p class="stat-line">Match win percentage: {{ stats.matchWinPct | toTwoDigits }}%</p>
+        <p class="stat-line">Average match duration: {{ stats.matchAvgTime | secondsToMinutes }}</p>
+        <p class="stat-line">Game win percentage: {{ stats.gameWinPct | toTwoDigits }}%</p>
+        <p class="stat-line">Average game duration: {{ stats.gameAvgTime | secondsToMinutes }}</p>
+      </div>
+    </div>
     <div class="matchListBox">
-      <h2>Matches</h2>
+      <!-- <h2>Matches</h2> -->
       <ul class="matchList" v-if="sortedFilteredMatches.length > 0">
         <match v-for="match in sortedFilteredMatches" :key=match.matchId :match=match></match>
       </ul>
       <p class="noMatches" v-if="(sortedFilteredMatches) && (sortedFilteredMatches.length === 0)">Sorry, no matches were found. :(<br><br>Try again using different search criteria.</p>
-    </div>
-    <div class="statBox">
-      <h2>Statistics</h2>
-      <div v-if="stats">
-        <p>Match win %: {{ stats.matchWinPct | toTwoDigits }}%</p>
-        <p>Game win %: {{ stats.gameWinPct | toTwoDigits }}%</p>
-        <p>Average match duration: {{ stats.matchAvgTime | secondsToMinutes }}</p>
-        <p>Average game duration: {{ stats.gameAvgTime | secondsToMinutes }}</p>
-      </div>
     </div>
   </div>
 </template>
@@ -273,6 +273,7 @@
   .filtersBox {
     width: 80%;
     margin: 40px;
+    margin-bottom: 10px;
     text-align: left;
     display: flex;
     flex-direction: row;
@@ -281,8 +282,7 @@
     color: rgba(255,255,255,.9);
   }
   .matchListBox {
-    width: 60%;
-    padding-left: 10%;
+    /* width: 60%; */
     height: 80vh;
   }
   .matchList {
@@ -294,9 +294,17 @@
     max-height: 55vh;
     overflow-y: scroll;
   }
-  .statBox {
+  .statsBox {
+    width: 100%;
+    padding-left: 3%;
+    margin: 10px;
+  }
+  .stat-line {
     width: 20%;
-    padding-right: 10%;
+    display: inline-block;
+    margin-top: 5px;
+    font-size: .8em;
+    text-align: left;
   }
   .header {
     background-color: #080808;
