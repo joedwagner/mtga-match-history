@@ -45,6 +45,12 @@
     </div>
     <div class="statBox">
       <h2>Statistics</h2>
+      <div v-if="stats">
+        <p>Match win %: {{ stats.matchWinPct | toTwoDigits }}%</p>
+        <p>Game win %: {{ stats.gameWinPct | toTwoDigits }}%</p>
+        <p>Average match duration: {{ stats.matchAvgTime | secondsToMinutes }}</p>
+        <p>Average game duration: {{ stats.gameAvgTime | secondsToMinutes }}</p>
+      </div>
     </div>
   </div>
 </template>
@@ -80,7 +86,8 @@
         },
         showDatePickerBox: false,
         dateStart: null,
-        dateEnd: null
+        dateEnd: null,
+        stats: null
       }
     },
     computed: {
@@ -153,6 +160,7 @@
           zClient.getMatches(this.filters, (err, res) => {
             if (!err) {
               this.filteredMatches = res.matches
+              this.stats = res.stats
             }
           })
         },
@@ -175,6 +183,19 @@
         'filters.decks': function() {
           this.sendFilters()
         }
+    },
+    filters: {
+      toTwoDigits(val) {
+        if (typeof val == 'string') {
+          val = parseFloat(val)
+        }
+        return val.toFixed(2)
+      },
+      secondsToMinutes(val) {
+        // Round to nearest second
+        val = Math.round(val)
+        return String(Math.floor(val / 60)) + ':' + String(val % 60)
+      }
     },
     created () {
       const zClient = new ZerorpcClient()
