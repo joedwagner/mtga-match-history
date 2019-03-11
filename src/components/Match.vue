@@ -1,13 +1,19 @@
 <template>
   <li class="match">
-      <p class="opponentHeader">{{ 'Match vs ' + match.opponent.displayName + ' - ' + match.gameType }}</p>
+      <p class="opponentHeader">{{ 'Match vs ' + opponentDisplayNameWithoutNumbers }}</p>
       <p class="dateText">{{ match.timestampEnd | UTCto12HourTime }}</p>
-      <div class="resultBox">
-        <p v-bind:result="match.result.toLowerCase()" class="resultText">{{ match.result | capitalize }}</p>
-        <p>{{ gamesWon + ' - ' + gamesLost }}</p>
+      <div class="deckDisplayBox box">
+        <p class="boxHeader">Deck</p>
+        <p>{{ match.deckName }}</p>
       </div>
-      <div class="deckDisplayBox">
-        <p> {{ match.deckName }}</p>
+      <div class="box">
+        <p class="boxHeader">Mode</p>
+        <p>{{ match.gameType }}</p>
+      </div>
+      <div class="resultBox box">
+        <p v-bind:result="match.result.toLowerCase()" class="resultText boxHeader">{{ match.result | capitalize }}</p>
+        <p class="gameScore">{{ gamesWon + ' - ' + gamesLost }}</p>
+        <p class="tiny-text">Game Score</p>
       </div>
       <ul v-show ="showGames"> 
         <li v-for="game in match.games" v-bind:key="game.gameNumber">
@@ -39,6 +45,11 @@
       },
       gamesLost() {
         return this.match.games.filter(g => g.result.toLowerCase() === 'loss').length
+      },
+      opponentDisplayNameWithoutNumbers() {
+        let displayName = this.match.opponent.displayName
+        let indexOfPound = displayName.indexOf('#')
+        return displayName.substring(0, indexOfPound)
       }
     },
     filters: {
@@ -81,31 +92,40 @@
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
+    justify-content: space-between;
     color: rgba(255,255,255,.8);
     background-color: #19181A;
   }
   .match:hover {
     background-color: rgba(50, 48, 52, 1);
   }
+  .box {
+    width: 30%;
+    text-align: center;
+  }
+  .boxHeader {
+    font-size: 1.25em;
+  }
   .dateText {
     width: 30%;
     text-align: right;
     float: right;
   }
+  .tiny-text {
+    font-size: .8em;
+    opacity: .9;
+  }
   .opponentHeader {
     width: 70%;
   }
   .deckDisplayBox {
-    text-align: center;
-    width: 30%;
     font-size: 1em;
   }
   .resultBox {
     text-align: center;
   }
   .resultText {
-    font-size: 1.5em;
-    margin-right: auto;
+    font-size: 1.25em;
   }
   [result=win] {
     color: #479761  ;

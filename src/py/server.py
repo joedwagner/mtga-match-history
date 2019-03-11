@@ -11,13 +11,9 @@ class RPC(object):
 	def get_all_matches(self):
 		return self.conn.get_all('matches')
 
-	def insert_many(self, number):
-		self.conn.insert_many(number)
-		return None
 
 	def get_matches(self, match_filter):
 		res = self.conn.get_matches(match_filter)
-		print(res)
 		return res
 
 
