@@ -11,7 +11,9 @@
         </ul>
       </aside>
     </nav>
-    <component class="component" v-bind:is="currentViewComponent"></component>
+    <keep-alive>
+      <component class="component" v-bind:is="currentViewComponent"></component>
+    </keep-alive>
   </div>
 </template>
 
@@ -43,7 +45,7 @@
   #app {
     text-align: center;
     font-family: 'Montserrat', sans-serif;
-    background-color: #080808;
+    background-color: #090909;
     color: rgba(255,255,255,.9);
     font-weight: lighter;
     height: 100vh;
@@ -61,15 +63,28 @@
     margin: 0;
   }
   h1 {
-    margin-top: 20px;
-    margin-bottom: 20px;
+    margin: 0;
     font-weight: lighter;
-    font-size: 3em;
+    font-size: 1.75em;
+    text-align: left;
   }
   nav {
-    width: 20%;
+    width: calc(20% - 2px);
+    font-size: 1.5em;
+    background-color: #111;
+    border-right: 2px solid #090909;
+  }
+  ul {
+    list-style: none;
+    padding-left: 20px;
+    text-align: left;
+  }
+  li {
+    margin-bottom: 1em;
   }
   .component {
     width: 80%;
+    height: 100%;
+    background-color: #111;
   }
 </style>
