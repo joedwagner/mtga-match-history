@@ -72,7 +72,7 @@
     text-align: left;
   }
   nav {
-    width: calc(20% - 2px);
+    width: 225px;
     font-size: 1.5em;
     background-color: #111;
     border-right: 2px solid #090909;
@@ -87,7 +87,7 @@
     cursor: pointer;
   }
   .component {
-    width: 80%;
+    width: calc(100vw - 225px);
     height: 100%;
     background-color: #111;
   }
