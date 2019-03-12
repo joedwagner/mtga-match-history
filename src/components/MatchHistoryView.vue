@@ -285,6 +285,8 @@
   .matchListBox {
     width: 80%;
     height: 80vh;
+    padding-left: 5%;
+    padding-right: 15%;
   }
   .matchList {
     list-style-type: none;
@@ -293,6 +295,7 @@
     border: 1px solid rgba(144,238,144,1);
     max-height: 70vh;
     overflow-y: scroll;
+    width: 80%
   }
   .statsBox {
     width: 100%;

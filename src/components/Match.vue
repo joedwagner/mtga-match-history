@@ -1,6 +1,9 @@
 <template>
   <li class="match">
-      <p class="opponentHeader">{{ 'Match vs ' + opponentDisplayNameWithoutNumbers }}</p>
+      <p class="opponentHeader">
+        {{ 'Match vs ' + opponentDisplayNameWithoutNumbers }}
+        <span class="rank" v-bind:style="{color: rankColor, 'border-color': rankColor}">{{ opponentRank }}</span>
+      </p>
       <p class="dateText">{{ match.timestampEnd | UTCto12HourTime }}</p>
       <div class="deckDisplayBox box">
         <p class="boxHeader">Deck</p>
@@ -13,7 +16,7 @@
       <div class="resultBox box">
         <p v-bind:result="match.result.toLowerCase()" class="resultText boxHeader">{{ match.result | capitalize }}</p>
         <p class="gameScore">{{ gamesWon + ' - ' + gamesLost }}</p>
-        <p class="tiny-text">Game Score</p>
+        <p class="tiny-text" v-on:click="showGameList(); style.width += '200px';">Game Score</p>
       </div>
       <ul v-show ="showGames"> 
         <li v-for="game in match.games" v-bind:key="game.gameNumber">
@@ -36,7 +39,12 @@
     },
     data () {
       return {
-        showGames: false
+        showGames: false,
+        rankColors: {
+          'bronze': '#cd7f32',
+          'silver': '#c0c0c0',
+          'gold': '#ffd700',
+        }
       }
     },
     computed: {
@@ -50,6 +58,17 @@
         let displayName = this.match.opponent.displayName
         let indexOfPound = displayName.indexOf('#')
         return displayName.substring(0, indexOfPound)
+      },
+      opponentRank() {
+        return this.match.opponent.rank.tier + ' ' + this.match.opponent.rank.division
+      },
+      rankColor() {
+        return this.rankColors[this.match.opponent.rank.tier.toLowerCase()]
+      }
+    },
+    methods: {
+      showGameList() {
+        this.showGames = true
       }
     },
     filters: {
@@ -92,7 +111,7 @@
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    justify-content: space-between;
+    justify-content: space-around;
     color: rgba(255,255,255,.8);
     background-color: #1a1a1a;
     transition: background-color .1s ease-in;
@@ -135,10 +154,12 @@
   [result=loss] {
     color: red;
   }
-  .matchBox {
-    width: 30%;
-  }
-  .resultBox {
-    width: 30%;
+  .rank {
+    font-size: .6em;
+    border: .5px solid;
+    border-radius: 10px;
+    padding: 4px;
+    vertical-align: middle;
+    opacity: .7;
   }
 </style>
