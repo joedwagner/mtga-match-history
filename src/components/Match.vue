@@ -5,6 +5,11 @@
         <span class="rank" v-bind:style="{color: rankColor, 'border-color': rankColor}">{{ opponentRank }}</span>
       </p>
       <p class="dateText">{{ match.timestampEnd | UTCto12HourTime }}</p>
+      <div class="resultBox box">
+        <p v-bind:result="match.result.toLowerCase()" class="resultText boxHeader">{{ match.result | capitalize }}</p>
+        <p class="gameScore">{{ gamesWon + ' - ' + gamesLost }}</p>
+        <p class="tiny-text" v-on:click="showGameList">Game Score</p>
+      </div>
       <div class="deckDisplayBox box">
         <p class="boxHeader">Deck</p>
         <p>{{ match.deckName }}</p>
@@ -13,18 +18,26 @@
         <p class="boxHeader">Mode</p>
         <p>{{ match.gameType }}</p>
       </div>
-      <div class="resultBox box">
-        <p v-bind:result="match.result.toLowerCase()" class="resultText boxHeader">{{ match.result | capitalize }}</p>
-        <p class="gameScore">{{ gamesWon + ' - ' + gamesLost }}</p>
-        <p class="tiny-text" v-on:click="showGameList(); style.width += '200px';">Game Score</p>
-      </div>
-      <ul v-show ="showGames"> 
-        <li v-for="game in match.games" v-bind:key="game.gameNumber">
-          <p>Game {{ game.gameNumber }}</p>
-          <p>{{ game.result }}</p>
-          <p>{{ game.reason }}</p>
-        </li>
-      </ul>
+      <transition name="slide-drawer">
+        <table v-show ="showGames">
+          <thead>
+            <tr>
+              <th>Game</th>
+              <th>Result</th>
+              <th>Duration</th>
+              <th>Turns</th>
+              <th>Reason</th>
+            </tr>
+          </thead>
+          <tr v-for="game in match.games" v-bind:key="game.gameNumber">
+            <td>{{ game.gameNumber }}</td>
+            <td>{{ game.result }}</td>
+            <td>{{ game.timestampEnd - game.timestampStart | secondsToMinutes }}</td>
+            <td></td>
+            <td>{{ game.reason }}</td>
+          </tr>
+        </table>
+      </transition>
   </li>
 </template>
 
@@ -68,7 +81,7 @@
     },
     methods: {
       showGameList() {
-        this.showGames = true
+        this.showGames = !this.showGames
       }
     },
     filters: {
@@ -98,6 +111,11 @@
 
         let formattedTime = hours + ':' + mins + ' ' + amPM
         return formattedDate + ' ' + formattedTime
+      },
+      secondsToMinutes(val) {
+        // Round to nearest second
+        val = Math.round(val)
+        return String(Math.floor(val / 60)) + 'm ' + String(val % 60) + 's'
       }
     }
   }
@@ -117,9 +135,9 @@
     transition: background-color .1s ease-in;
     cursor: default;
   }
-  .match:hover {
+  /* .match:hover {
     background-color: #2b2b2b;
-  }
+  } */
   .box {
     width: 30%;
     text-align: center;
@@ -161,5 +179,30 @@
     padding: 4px;
     vertical-align: middle;
     opacity: .7;
+    margin-left: 3px;
+  }
+  table {
+    font-size: .7em;
+    padding-left: 20%;
+    width: 82%;
+    font-weight: lighter;
+    text-align: center;
+    border-collapse: collapse;
+  }
+  th {
+    font-size: 1.2em;
+    font-weight: normal;
+    border: 1px solid black;
+    background-color: #222;
+  }
+  td, th {
+    padding: 5px;
+  }
+  td {
+    border-left: 1px solid black;
+    border-right: 1px solid black;
+  }
+  tr:last-child td {
+    border-bottom: 1px solid black;
   }
 </style>

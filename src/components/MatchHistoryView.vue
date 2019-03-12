@@ -191,7 +191,7 @@
       secondsToMinutes(val) {
         // Round to nearest second
         val = Math.round(val)
-        return String(Math.floor(val / 60)) + ':' + String(val % 60)
+        return String(Math.floor(val / 60)) + 'm ' + String(val % 60) + 's'
       }
     },
     created () {
@@ -283,10 +283,9 @@
     color: rgba(255,255,255,.9);
   }
   .matchListBox {
-    width: 80%;
+    width: 100%;
     height: 80vh;
     padding-left: 5%;
-    padding-right: 15%;
   }
   .matchList {
     list-style-type: none;

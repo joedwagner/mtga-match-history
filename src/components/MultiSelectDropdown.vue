@@ -8,7 +8,7 @@
 		<div class="dropdown" v-show="dropdownOpen">
 			<ul>
 				<li class="allOption" v-on:click="clearSelected">{{ 'All ' + capitalizedLabel }}<div class="checkmark" v-show="selected.length === 0">&#x1F5F8;</div>
-				<li class="listOption" v-for="option in options" v-on:click="toggleSelect(option)">{{ Array.isArray(options) ?
+				<li class="listOption" v-for="option in options" v-on:click="toggleSelect(option)" v-bind:key="option">{{ Array.isArray(options) ?
 					option : option.name }}<div class="checkmark" v-show="selected.includes(option)">&#x1F5F8;</div>
 				</li>
 			</ul>
