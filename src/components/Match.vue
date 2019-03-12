@@ -96,6 +96,7 @@
     color: rgba(255,255,255,.8);
     background-color: #1a1a1a;
     transition: background-color .1s ease-in;
+    cursor: default;
   }
   .match:hover {
     background-color: #2b2b2b;
