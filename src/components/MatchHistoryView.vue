@@ -219,6 +219,17 @@
   }
   .dropdown {
     width: 30%;
+    height: 0px;
+    cursor: pointer;
+  }
+  .match {
+    margin: 0;
+  }
+  .listOption {
+    margin: 0;
+  }
+  .allOption {
+    margin: 0;
   }
   /* Datepicker Styles */
   .date-picker-box {
@@ -262,9 +273,8 @@
     border: none;
   }
   .filtersBox {
-    width: 80%;
-    margin: 40px;
-    margin-bottom: 10px;
+    width: 100%;
+    margin: 10px;
     text-align: left;
     display: flex;
     flex-direction: row;
@@ -273,27 +283,25 @@
     color: rgba(255,255,255,.9);
   }
   .matchListBox {
-    width: 60vw;
+    width: 80%;
     height: 80vh;
   }
   .matchList {
     list-style-type: none;
-    margin: 0 0;
-    border: 1px solid rgba(144,238,144,1);
-    margin: 20px 15px 20px 15px;
+    margin: 0;
     padding: 0;
-    max-height: 55vh;
+    border: 1px solid rgba(144,238,144,1);
+    max-height: 70vh;
     overflow-y: scroll;
   }
   .statsBox {
     width: 100%;
-    padding-left: 3%;
     margin: 10px;
+    margin-top: 20px;
   }
   .stat-line {
-    width: 20%;
+    width: 35%;
     display: inline-block;
-    margin-top: 5px;
     font-size: .8em;
     text-align: left;
   }
