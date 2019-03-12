@@ -31,7 +31,7 @@
           </thead>
           <tr v-for="game in match.games" v-bind:key="game.gameNumber">
             <td>{{ game.gameNumber }}</td>
-            <td>{{ game.result }}</td>
+            <td v-bind:result="game.result.toLowerCase()">{{ game.result }}</td>
             <td>{{ game.timestampEnd - game.timestampStart | secondsToMinutes }}</td>
             <td></td>
             <td>{{ game.reason }}</td>
