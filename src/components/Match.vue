@@ -94,10 +94,11 @@
     flex-wrap: wrap;
     justify-content: space-between;
     color: rgba(255,255,255,.8);
-    background-color: #19181A;
+    background-color: #1a1a1a;
+    transition: background-color .1s ease-in;
   }
   .match:hover {
-    background-color: rgba(50, 48, 52, 1);
+    background-color: #2b2b2b;
   }
   .box {
     width: 30%;

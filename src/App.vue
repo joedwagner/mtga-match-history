@@ -53,6 +53,9 @@
     flex-direction: row;
     flex-wrap: wrap;
   }
+  #app:hover {
+    cursor: default;
+  }
    .header {
     background-color: #080808;
     padding: 10px;
@@ -81,6 +84,7 @@
   }
   li {
     margin-bottom: 1em;
+    cursor: pointer;
   }
   .component {
     width: 80%;
