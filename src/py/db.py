@@ -81,9 +81,9 @@ class DB(object):
 
 		output = dict([('stats',stats),('matches',mDict)])
 
-		with open('matches.json','w') as outfile: 
+		with open('matches.json','w',encoding='utf-8') as outfile: 
 			json.dump(output,outfile)
-			
+		
 		return output
 
 	def all(self):

@@ -6,7 +6,7 @@ from tzlocal import get_localzone
 
 def retrieve(path,filename):
 # read in the strings
-    file = open(path + '\\' + filename,'r', encoding='utf-8');
+    file = open(path + '\\' + filename,'r', encoding='utf-8')
             
     lines = file.readlines()
     lines = [x for x in lines if x!='\n']
