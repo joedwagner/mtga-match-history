@@ -44,10 +44,10 @@
     </div>
     <div class="matchListBox">
       <!-- <h2>Matches</h2> -->
-      <ul class="matchList" v-if="sortedFilteredMatches.length > 0">
+      <ul class="matchList" v-if="sortedFilteredMatches" v-show="sortedFilteredMatches.length > 0">
         <match v-for="match in sortedFilteredMatches" :key=match.matchId :match=match></match>
       </ul>
-      <p class="noMatches" v-if="(sortedFilteredMatches) && (sortedFilteredMatches.length === 0)">Sorry, no matches were found. :(<br><br>Try again using different search criteria.</p>
+      <p class="noMatches" v-if="sortedFilteredMatches" v-show="sortedFilteredMatches.length === 0">Sorry, no matches were found. :(<br><br>Try again using different search criteria.</p>
     </div>
   </div>
 </template>
@@ -127,6 +127,8 @@
         }
       }
     },
+    mounted() {
+    },
     methods: {
       updateFilters(filter) {
           switch (filter.type) {
@@ -157,7 +159,7 @@
           zClient.getMatches(this.filters, (err, res) => {
             if (!err) {
               this.filteredMatches = res.matches
-              this.stats = res.stats
+              this.stats = Object.keys(res.stats).length ? res.stats : null
             }
           })
         },
