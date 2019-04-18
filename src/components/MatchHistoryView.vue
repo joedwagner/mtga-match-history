@@ -23,6 +23,7 @@
         v-if="matches"
         :options=deckList
         :label=deckLabel
+        :sorted="true"
         @update-filters="updateFilters">
       </multi-select-dropdown>
       <div 
@@ -128,6 +129,9 @@
       }
     },
     mounted() {
+      require('electron').ipcRenderer.on('matches-updated', () => {
+        this.sendFilters();
+      })
     },
     methods: {
       updateFilters(filter) {

@@ -1,6 +1,7 @@
 const path = require('path')
 const fs = require('fs')
 const child_process = require('child_process')
+const events = require('events')
 
 /*****
 
@@ -11,9 +12,10 @@ and destruction of Python processes
 
 *****/
 
-class PythonProcessManager {
+class PythonProcessManager extends events {
 
   constructor () {
+    super()
     this.pythonProcess = null
     this.pythonServerPort = 4242
   }
@@ -26,13 +28,16 @@ class PythonProcessManager {
     } else {
       // Otherwise run the terminal command 'python' with the script's path
       this.pythonProcess = child_process.spawn('python', [pythonPath])
-      this.pythonProcess.on('error', (err) => {
-        console.log(err)
-      })
-      this.pythonProcess.stdout.on('data', (data) => {
-        console.log(data.toString('utf8'))
-      })
     }
+
+    this.pythonProcess.on('error', (err) => {
+      console.log(err)
+    })
+    this.pythonProcess.stdout.on('data', (data) => {
+      if(data.toString('utf8').trim() == 'update') {
+        this.emit('matchUpdate')
+      }
+    })
 
     // Output to console on success/failure of Python process spawn
     if (this.pythonProcess != null) {
@@ -72,7 +77,7 @@ const PYTHON_MODULE = 'server' // without .py suffix
 /** Function that checks if the Python code has been packaged by 
  looking for a dist folder **/
 const isPackaged = () => {
-  return fs.existsSync(path.join(__dirname, PYTHON_DIST_FOLDER))
+  return fs.existsSync(path.join(__dirname, '../',PYTHON_DIST_FOLDER))
 }
 
 /** Function that returns the full path of the 
@@ -84,10 +89,10 @@ const getPythonPath = (filename) => {
     pythonPath = path.join(__dirname, '../src/', PYTHON_FOLDER, filename + '.py')
   } else if (process.platform === 'win32') {
     // Packaged and running Windows - return .exe
-    pythonPath = path.join(__dirname, PYTHON_DIST_FOLDER, filename, filename + '.exe')
+    pythonPath = path.join(__dirname, '../', PYTHON_DIST_FOLDER, filename, filename + '.exe')
   } else {
     // Packaged and running anything else - return Python module
-    pythonPath = path.join(__dirname, PYTHON_DIST_FOLDER, filename, filename)
+    pythonPath = path.join(__dirname, '../', PYTHON_DIST_FOLDER, filename, filename)
   }
   return pythonPath
 }

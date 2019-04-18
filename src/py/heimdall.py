@@ -40,17 +40,26 @@ class Handler(FileSystemEventHandler):
             if os.path.basename(event.src_path)=='output_log.txt':
                 print('Something changed.', flush=True)
                 f = open('output.txt', 'w+')
-                start = datetime.now().timestamp()
-                f.write('retrieving\n')
+                begin = datetime.now().timestamp()
+                f.write('retrieving - ')
                 dicts = retrieve(event.src_path[0:-14],os.path.basename(event.src_path))
-                if dicts is not None:
-                    f.write('constructing objects\n')
-                    works = forge(dicts)
-                    if works is not None:
-                        f.write('writing to db\n')
-                        record(works)
                 end = datetime.now().timestamp()
-                f.write('time taken: ' + str(end-start) + '\n')
+                f.write('time taken: ' + str(end-begin) + '\n')
+                if dicts is not None:
+                    f.write('constructing objects - ')
+                    start = datetime.now().timestamp()
+                    works = forge(dicts)
+                    end = datetime.now().timestamp()
+                    f.write('time taken: ' + str(end-start) + '\n')
+                    if works is not None:
+                        f.write('writing to db - ')
+                        start = datetime.now().timestamp()
+                        record(works)
+                        print('update', flush=True);
+                        end = datetime.now().timestamp()
+                    f.write('time taken: ' + str(end-start) + '\n')
+                end = datetime.now().timestamp()
+                f.write('time taken: ' + str(end-begin) + '\n')
                 f.write(datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
                 f.close()
 

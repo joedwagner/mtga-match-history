@@ -32,6 +32,10 @@
 			label: {
 				type: String,
 				required: false
+			},
+			sorted: {
+				type: Boolean,
+				required: false
 			}
 		},
 		data() {
@@ -41,6 +45,13 @@
 			}
 		},
 		computed: {
+			sortedOptions() {
+				if (this.sorted) {
+					return this.options.slice(0).sort((a, b) => a.name < b.name);
+				} else {
+					return this.options;
+				}
+			},
 			selectedOptionsText() {
 				let text = ''
 				if (this.selected.length === 0 || this.selected.length === this.options.length) {
@@ -144,6 +155,8 @@
 		padding-left: 0;
 		margin: 0;
 		background-color: inherit;
+		max-height: 500px;
+		overflow-y: auto;
 	}
 
 	ul>li {
@@ -151,9 +164,14 @@
 		padding: .5em;
 	}
 
+	.allOption {
+		font-size: .9em;
+	}
+
 	.listOption {
 		display: block;
 		padding: .5em;
+		font-size: .9em;
 	}
 
 	ul>li:hover {
