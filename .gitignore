@@ -22,6 +22,8 @@ yarn-error.log*
 
 #Electron-builder output
 /dist_electron
+/pydist
+/mtga-project-vue-win32-x64
 
 #Personal work todo
 joe-todo.txt
