@@ -44,11 +44,11 @@
       </div>
     </div>
     <div class="matchListBox">
-      <!-- <h2>Matches</h2> -->
-      <ul class="matchList" v-if="sortedFilteredMatches" v-show="sortedFilteredMatches.length > 0">
-        <match v-for="match in sortedFilteredMatches" :key=match.matchId :match=match></match>
+      <ul class="matchList" v-if="sortedFilteredMatches" v-show="sortedFilteredMatches.length > 0" @scroll="checkLoadMore">
+        <match v-for="match in currentPageMatches" :key=match.matchId :match=match></match>
       </ul>
       <p class="noMatches" v-if="sortedFilteredMatches" v-show="sortedFilteredMatches.length === 0">Sorry, no matches were found. :(<br><br>Try again using different search criteria.</p>
+      <p class="matchCount" v-if="sortedFilteredMatches" v-show="sortedFilteredMatches.length > 0">Displaying {{ currentPageMatches.length }} of {{ sortedFilteredMatches.length }} matches</p>    
     </div>
   </div>
 </template>
@@ -85,7 +85,9 @@
         showDatePickerBox: false,
         dateStart: null,
         dateEnd: null,
-        stats: null
+        stats: null,
+        numVisiblePages: 1,
+        pageSize: 20
       }
     },
     computed: {
@@ -97,6 +99,14 @@
           }
         })
         return deckList
+      },
+      currentPageMatches() {
+        let numMatches = this.numVisiblePages*this.pageSize;
+        if (numMatches <= this.sortedFilteredMatches.length) {
+          return this.sortedFilteredMatches.slice(0, numMatches);
+        } else {
+          return this.sortedFilteredMatches;
+        }
       },
       modeList () {
         let modeList = []
@@ -174,6 +184,14 @@
               end: this.dateEnd.toLocaleDateString()
             }
           }
+        },
+        checkLoadMore (event) {
+          if (event.target.scrollTop + event.target.offsetHeight > event.target.scrollHeight) {
+            this.loadNextPage();
+          }
+        },
+        loadNextPage() {
+          this.numVisiblePages += 1;
         }
     },
     watch: {
@@ -298,7 +316,7 @@
     margin: 0;
     padding: 0;
     border: 1px solid rgba(144,238,144,1);
-    max-height: 70vh;
+    max-height: 60vh;
     overflow-y: scroll;
     width: 80%
   }
@@ -325,5 +343,11 @@
   }
   .date-picker {
     color: black;
+  }
+  .left {
+    text-align: left;
+  }
+  .matchCount {
+    
   }
 </style>
