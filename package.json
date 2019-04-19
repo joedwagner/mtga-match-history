@@ -9,9 +9,9 @@
     "electron:build": "vue-cli-service electron:build",
     "electron:serve": "vue-cli-service electron:serve",
     "postinstall": "electron-builder install-app-deps",
-    "e:dev": "vue-cli-service electron:serve",
-    "e:build": "vue-cli-service electron:build",
-    "py:build:heimdall": "(pyinstaller src/py/heimdall.py --distpath pydist) && (rm -rf build/) && rm -rf heimdall.spec",
+    "e:dev": "(rm -rf pydist || true) && vue-cli-service electron:serve",
+    "e:build": "(npm run py:build || true) && vue-cli-service electron:build",
+    "py:build:heimdall": "(pyinstaller src/py/heimdall.py --distpath pydist || true) && (rm -rf build/ || true) && rm -rf heimdall.spec",
     "py:build:server": "(pyinstaller src/py/server.py --distpath pydist || true) && (rm -rf build/ || true) && rm -rf server.spec",
     "py:build": "npm run py:build:heimdall && npm run py:build:server"
   },
