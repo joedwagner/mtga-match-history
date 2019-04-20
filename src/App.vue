@@ -6,8 +6,8 @@
     <nav>
       <aside>
         <ul>
-          <li v-on:click="currentView = 'MatchHistory'">Match History</li>
-          <li v-on:click="currentView = 'Graphs'">Graphs</li>
+          <li :class="{ selectedView: (currentView == 'MatchHistory') }" v-on:click="currentView = 'MatchHistory'">Match History</li>
+          <li :class="{ selectedView: (currentView == 'Graphs') }" v-on:click="currentView = 'Graphs'">Graphs</li>
         </ul>
       </aside>
     </nav>
@@ -90,5 +90,8 @@
     width: calc(100vw - 225px);
     height: 100%;
     background-color: #111;
+  }
+  .selectedView {
+    color: #f37426;
   }
 </style>
