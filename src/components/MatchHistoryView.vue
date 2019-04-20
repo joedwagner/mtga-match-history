@@ -48,7 +48,8 @@
         <match v-for="match in currentPageMatches" :key=match.matchId :match=match></match>
       </ul>
       <p class="noMatches" v-if="sortedFilteredMatches" v-show="sortedFilteredMatches.length === 0">Sorry, no matches were found. :(<br><br>Try again using different search criteria.</p>
-      <p class="matchCount" v-if="sortedFilteredMatches" v-show="sortedFilteredMatches.length > 0">Displaying {{ currentPageMatches.length }} of {{ sortedFilteredMatches.length }} matches</p>    
+      <p class="matchCount" v-if="sortedFilteredMatches" v-show="sortedFilteredMatches.length > 0">Displaying {{ currentPageMatches.length }} of {{ sortedFilteredMatches.length }} matches <span @click="loadNextPage" v-if="currentPageMatches.length != sortedFilteredMatches.length" class="show-more">SHOW MORE</span></p>    
+      
     </div>
   </div>
 </template>
@@ -348,8 +349,18 @@
     text-align: left;
   }
   .matchCount {
-    width: 80%;
+    width: calc(80% - 20px);
     font-size: .9em;
     margin-top: 20px;
+  }
+  .show-more {
+    font-size: .65em;
+    padding: 7px;
+  }
+  .show-more:hover {
+    background: #1a1a1a;
+    border-radius: 10%;
+    color: #fff;
+    cursor: pointer;
   }
 </style>
