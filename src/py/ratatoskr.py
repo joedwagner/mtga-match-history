@@ -3,96 +3,98 @@ import json
 import pytz
 from datetime import datetime
 from tzlocal import get_localzone
+import time
 
 def retrieve(path,filename):
-# read in the strings
+    # read in the strings
     file = open(path + '\\' + filename,'r', encoding='utf-8')
             
     lines = file.readlines()
     lines = [x for x in lines if x!='\n']
     lines = [x for x in lines if x!=' \n']
     
-    # find '    "messageName": "DuelScene.GameStop",\n'
-    mStr = list([s for s in lines
-                 if '"matchId"'.lower() in s.lower()])
-    # check if list is empty
-    if mStr:
-        mIdx = [i for i,
-                s in enumerate(lines) 
-                if '"matchid"'.lower() in s.lower()]
-        matchcreated = [i for i,
-                        s in enumerate(lines) 
-                        if 'matchcreated'.lower() in s.lower()]
+    matchesStr = list([string for string in lines
+                 if '"matchId"'.lower() in string.lower()])
     
-        mList = list() 
-        for i in range(0,len(mIdx)):
-            bgn = [i for i, 
-                   s in enumerate(reversed(lines[0:mIdx[i]])) 
-                   if s == "{\n"]
-            bgnIdx = mIdx[i]-bgn[0]-1
+    matchesIdx = [mii for mii,
+        mis in enumerate(lines) 
+        if '"matchid"'.lower() in mis.lower()]
+    
+    # Parse lines if matches are found
+    if matchesIdx:
+        matchcreatedIdx = [mci for mci,
+                        mcs in enumerate(lines) 
+                        if 'matchcreated'.lower() in mcs.lower()]
+    
+        matchesList = list() 
+        for i in range(0,len(matchesIdx)):
+           
+            for matchBeginBraceIdx, currentLine in enumerate(reversed(lines[0:matchesIdx[i]])):
+                if currentLine == "{\n":
+                    openBraceIdx = matchesIdx[i] - matchBeginBraceIdx - 1
+                    break
+            
             # Check if the MatchFound outlier is here
-            for m in range(0,len(matchcreated)):
-                if bgnIdx<matchcreated[m]<mIdx[i]:
+            for m in range(0,len(matchcreatedIdx)):
+                if openBraceIdx<matchcreatedIdx[m]<matchesIdx[i]:
                     # If this entry was the match created message, find actual 
                     # beginning of the string as well as the index of the 
                     # opening bracket for later use
-                    bgnIdx = matchcreated[m]
-                    bracketFnd = lines[bgnIdx].find('{')
+                    openBraceIdx = matchcreatedIdx[m]
+                    matchFound = lines[openBraceIdx].find('{')
                     
-                    # Find the deck info since it will appear just above this 
-                    # point
-                    deckbgn = [i for i, 
-                               s in enumerate(reversed(lines[0:mIdx[i]]))
-                               if 'decksubmit' in s.lower()]
-                    deckbgnIdx = mIdx[i]-deckbgn[0]
-                    deckend = [i for i,
-                               s in enumerate(lines[deckbgnIdx:-1])
-                               if s == "}\n"]
-                    deckendIdx = deckbgnIdx + deckend[0] + 1
-                    deckStr = ''.join(lines[deckbgnIdx:deckendIdx])
+                    for deckBeginBraceIdx, currentLine in enumerate(reversed(lines[0:matchesIdx[i]])):
+                        if currentLine == "{\n":
+                            deckBeginIdx = matchesIdx[i] - deckBeginBraceIdx - 1
+                            break
+                   
+                    for deckEndBraceIdx, currentLine in enumerate(lines[deckBeginIdx:-1]):
+                        if currentLine == "}\n":
+                            deckEndIdx = deckBeginIdx + deckEndBraceIdx + 1
+                            break
+                    
+                    deckStr = ''.join(lines[deckBeginIdx:deckEndIdx])
                     break
                 else:
-                    bracketFnd = 0
-                                        
-            end = [i for i, s in enumerate(lines[mIdx[i]:-1]) if s == "}\n"]
-            endIdx = mIdx[i]+end[0]+1
+                    matchFound = 0
             
-            # Build the dict and append thelist
-            matchStr = ''.join(lines[bgnIdx:endIdx])
-            matchStr = matchStr[bracketFnd:-1]
-            mList.append(json.loads(matchStr))
+            for matchEndBraceIdx, currentLine in enumerate(lines[matchesIdx[i]:-1]):
+                if currentLine == "}\n":
+                    closeBraceIdx = matchesIdx[i]+matchEndBraceIdx+1
+                    break
+            
+            # Build the dict and append the list
+            matchStr = ''.join(lines[openBraceIdx:closeBraceIdx])
+            matchStr = matchStr[matchFound:-1]
+            matchesList.append(json.loads(matchStr))
             
             # Find the time for the entry and enter it at the top level
             tStart=[]
             tEnd=[]
             idx = 0
             while not tStart or not tEnd:
-                tStart = [it for it, char in enumerate(lines[bgnIdx-idx]) if char == ']']
-                tEnd = [it for it, char in enumerate(lines[bgnIdx-idx]) if char == ':']
+                tStart = [it for it, char in enumerate(lines[openBraceIdx-idx]) if char == ']']
+                tEnd = [it for it, char in enumerate(lines[openBraceIdx-idx]) if char == ':']
                 idx += 1
-            tString = lines[bgnIdx-idx+1][tStart[0]+1:tEnd[1]+6]
+            tString = lines[openBraceIdx-idx+1][tStart[0]+1:tEnd[1]+6]
             timeobj = datetime.strptime(tString,'%m/%d/%Y %I:%M:%S %p')
             timeobj.astimezone(get_localzone())
             timeobjUTC = timeobj.astimezone(pytz.utc)
-            mList[i]['timestamp'] = int(timeobjUTC.timestamp())
+            matchesList[i]['timestamp'] = int(timeobjUTC.timestamp())
             
             # add matchid to first level if there isn't one
-            if not mStr[i].strip()[1:8] in mList[i]:
-                ends = [it for it, char in enumerate(mStr[i]) if char == '"']
-                mList[i]['matchid'] = mStr[i][ends[-2]+1:ends[-1]]
+            if not matchesStr[i].strip()[1:8] in matchesList[i]:
+                ends = [it for it, char in enumerate(matchesStr[i]) if char == '"']
+                matchesList[i]['matchid'] = matchesStr[i][ends[-2]+1:ends[-1]]
             else:
-                mList[i]['matchid'] =  mList[i].pop(mStr[i].strip()[1:8])
+                matchesList[i]['matchid'] =  matchesList[i].pop(matchesStr[i].strip()[1:8])
             
             # add deck dictionary if found
             if deckStr:
-                mList[i]['deck'] = json.loads(deckStr)
+                matchesList[i]['deck'] = json.loads(deckStr)
                 deckStr = None
                 
-        data = mList
-                    
-#        with open('rawdata.json','w') as outfile: 
-#            json.dump(data,outfile)
-        
+        data = matchesList
         return data
     else:
         print("No match data found in file")
