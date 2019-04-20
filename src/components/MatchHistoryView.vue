@@ -316,7 +316,7 @@
     margin: 0;
     padding: 0;
     border: 1px solid rgba(144,238,144,1);
-    max-height: 60vh;
+    max-height: 65vh;
     overflow-y: scroll;
     width: 80%
   }
@@ -348,6 +348,8 @@
     text-align: left;
   }
   .matchCount {
-    
+    width: 80%;
+    font-size: .9em;
+    margin-top: 20px;
   }
 </style>
