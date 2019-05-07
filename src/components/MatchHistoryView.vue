@@ -35,7 +35,6 @@
       </div>
     </div>
     <div class="statsBox">
-      <!-- <h2>Statistics</h2> -->
       <div v-if="stats">
         <p class="stat-line">Match win percentage: {{ stats.matchWinPct | toTwoDigits }}%</p>
         <p class="stat-line">Average match duration: {{ stats.matchAvgTime | secondsToMinutes }}</p>
@@ -44,9 +43,17 @@
       </div>
     </div>
     <div class="matchListBox">
-      <ul class="matchList" v-if="sortedFilteredMatches" v-show="sortedFilteredMatches.length > 0" @scroll="checkLoadMore">
+      <div id="match_list_header">
+        <span class="result-text">Result</span>
+        <span class="type-text small">Mode</span>
+        <span class="deck-text small">Deck</span>
+        <span class="opponent-text small">Opponent</span>
+        <span class="rank-text">Opponent Rank</span>
+        <!-- <span class="date-text wrap small">Date</span> -->
+      </div>
+      <div class="matchList" v-if="sortedFilteredMatches" v-show="sortedFilteredMatches.length > 0" @scroll="checkLoadMore">
         <match v-for="match in currentPageMatches" :key=match.matchId :match=match></match>
-      </ul>
+      </div>
       <p class="noMatches" v-if="sortedFilteredMatches" v-show="sortedFilteredMatches.length === 0">Sorry, no matches were found. :(<br><br>Try again using different search criteria.</p>
       <p class="matchCount" v-if="sortedFilteredMatches" v-show="sortedFilteredMatches.length > 0">Displaying {{ currentPageMatches.length }} of {{ sortedFilteredMatches.length }} matches <span @click="loadNextPage" v-if="currentPageMatches.length != sortedFilteredMatches.length" class="show-more">SHOW MORE</span></p>    
       
@@ -237,10 +244,11 @@
 <style>
   @import url('https://fonts.googleapis.com/css?family=Montserrat');
   #matchHistoryView {
-    display: flex;
+    width: 100%;
+    /* display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    justify-content: space-around;
+    justify-content: space-around; */
   }
   .dropdown {
     width: 30%;
@@ -297,9 +305,10 @@
   .vdp-datepicker__calendar header .prev.disabled:after {
     border: none;
   }
+
   .filtersBox {
-    width: 100%;
-    margin: 10px;
+    width: 70%;
+    margin: 10px auto;
     text-align: left;
     display: flex;
     flex-direction: row;
@@ -307,24 +316,10 @@
     flex-wrap: wrap;
     color: rgba(255,255,255,.9);
   }
-  .matchListBox {
-    width: 100%;
-    height: 80vh;
-    padding-left: 5%;
-  }
-  .matchList {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-    border: 1px solid rgba(144,238,144,1);
-    max-height: 65vh;
-    overflow-y: scroll;
-    width: 80%
-  }
+
   .statsBox {
-    width: 100%;
-    margin: 10px;
-    margin-top: 20px;
+    width: 80%;
+    margin: 40px auto 20px auto;
   }
   .stat-line {
     width: 35%;
@@ -332,6 +327,50 @@
     font-size: .8em;
     text-align: left;
   }
+
+  .matchListBox {
+    width: 80%;
+    height: 80vh;
+    margin: 0 auto;
+  }
+  .matchList {
+    padding: 0;
+    max-height: 60vh;
+    overflow: auto;
+  }
+  #match_list_header {
+    display: flex;
+    flex-direction: row;
+    text-align: left;
+    padding: 5px 10px 5px 1%;
+  }
+
+  .result-text {
+    width: 10%;
+  }
+
+  .type-text {
+    width: 15%;
+  }
+
+  .deck-text {
+    width: 24%;
+  }
+
+  .opponent-text {
+    width: 19.5%;
+  }
+
+  .rank-text {
+    width: 25%;
+    font-size: .9em;
+  }
+
+  .date-text {
+    width: 18%;
+  }
+
+  
   h2 {
     font-weight: lighter;
     margin: 0;
@@ -349,9 +388,10 @@
     text-align: left;
   }
   .matchCount {
-    width: calc(80% - 20px);
+    text-align: center;
+    width: calc(100% - 40px);
     font-size: .9em;
-    margin-top: 20px;
+    margin-top: 3%;
   }
   .show-more {
     font-size: .65em;

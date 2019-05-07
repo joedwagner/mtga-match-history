@@ -3,14 +3,14 @@
     <div class="header">
       <h1>MTGA Match History Viewer</h1>
     </div>
-    <nav>
+    <!-- <nav>
       <aside>
         <ul>
           <li :class="{ selectedView: (currentView == 'MatchHistory') }" v-on:click="currentView = 'MatchHistory'">Match History</li>
           <li :class="{ selectedView: (currentView == 'Graphs') }" v-on:click="currentView = 'Graphs'">Graphs</li>
         </ul>
       </aside>
-    </nav>
+    </nav> -->
     <keep-alive>
       <component class="component" v-bind:is="currentViewComponent"></component>
     </keep-alive>
@@ -87,7 +87,7 @@
     cursor: pointer;
   }
   .component {
-    width: calc(100vw - 225px);
+    min-width: calc(100vw - 225px);
     height: 100%;
     background-color: #111;
   }

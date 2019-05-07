@@ -1,44 +1,12 @@
 <template>
-  <li class="match">
-      <p class="opponentHeader">
-        {{ 'Match vs ' + opponentDisplayNameWithoutNumbers }}
-        <span class="rank" v-bind:style="{color: rankColor, 'border-color': rankColor}">{{ opponentRank }}</span>
-      </p>
-      <p class="dateText">{{ match.timestampEnd | UTCto12HourTime }}</p>
-      <div class="resultBox box">
-        <p v-bind:result="match.result.toLowerCase()" class="resultText boxHeader">{{ match.result | capitalize }}</p>
-        <p class="gameScore">{{ gamesWon + ' - ' + gamesLost }}</p>
-        <p class="tiny-text" v-on:click="showGameList">Game Score</p>
-      </div>
-      <div class="deckDisplayBox box">
-        <p class="boxHeader">Deck</p>
-        <p>{{ match.deckName }}</p>
-      </div>
-      <div class="box">
-        <p class="boxHeader">Mode</p>
-        <p>{{ match.gameType }}</p>
-      </div>
-      <transition name="slide-drawer">
-        <table v-show ="showGames">
-          <thead>
-            <tr>
-              <th>Game</th>
-              <th>Result</th>
-              <th>Duration</th>
-              <th>Turns</th>
-              <th>Reason</th>
-            </tr>
-          </thead>
-          <tr v-for="game in match.games" v-bind:key="game.gameNumber">
-            <td>{{ game.gameNumber }}</td>
-            <td v-bind:result="game.result.toLowerCase()">{{ game.result }}</td>
-            <td>{{ game.timestampEnd - game.timestampStart | secondsToMinutes }}</td>
-            <td></td>
-            <td>{{ game.reason }}</td>
-          </tr>
-        </table>
-      </transition>
-  </li>
+  <div class="match" v-bind:result="match.result.toLowerCase()">
+    <span class="result-text" v-bind:result="match.result.toLowerCase()">{{ match.result | capitalize }}</span>
+    <span class="type-text small">{{ match.gameType }}</span>
+    <span class="deck-text small">{{ match.deckName }}</span>
+    <span class="opponent-text small">vs. {{ opponentDisplayNameWithoutNumbers }}</span>
+    <span class="rank-text" v-bind:style="{color: rankColor, 'border-color': rankColor}">{{ opponentRank }}</span>
+    <span class="date-text wrap small">{{ match.timestampEnd | UTCto12HourTime }}</span>
+  </div>
 </template>
 
 <script>
@@ -124,20 +92,81 @@
 <style scoped>
   .match {
     text-align: left;
-    border-bottom: 1px solid rgba(144,238,144,.5);
+    /* border-bottom: 1px solid rgba(144,238,144,.5); */
     padding: 5px 10px 5px 10px;
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: space-around;
     color: rgba(255,255,255,.8);
     background-color: #1a1a1a;
-    transition: background-color .1s ease-in;
-    cursor: default;
+    margin-bottom: 3px;
+    display: flex;
+    flex-direction: row;
+    /* justify-content: space-around; */
+    border-radius: 2px;
+    height: 50px;
   }
-  /* .match:hover {
-    background-color: #2b2b2b;
-  } */
+
+  .result-text {
+    width: 7%;
+    font-size: 1.1em !important;
+    text-align: center;
+    margin-right: 3%;
+    /* background: #f37426;
+    height: 30px; */
+  }
+
+  .type-text {
+    width: 15%;
+  }
+
+  .deck-text {
+    width: 25%;
+    font-size: 1em !important;
+  }
+
+  .opponent-text {
+    width: 20%;
+    text-decoration: underline;
+    font-size: 1em !important;
+  }
+
+  .rank-text {
+    width: 10%;
+    font-size: .8em;
+    border: .5px solid;
+    border-radius: 10px;
+    padding: 4px;
+    vertical-align: middle;
+    opacity: .7;
+    margin-left: 3px;
+    text-align: center;
+  }
+
+  .date-text {
+    padding-left: 5% !important;
+    width: 20%;
+    text-align: left;
+  }
+
+  .wrap {
+    white-space: normal;
+  }
+
+  .match > span {
+    padding-left: 10px;
+    padding-right: 10px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    padding-top: 10px;
+    font-size: .9em;
+  }
+
+  .space-right {
+    margin-right: 5%;
+  }
+
+  .no-margin {
+    margin: 0;
+  }
   .box {
     width: 30%;
     text-align: center;
@@ -145,42 +174,32 @@
   .boxHeader {
     font-size: 1.25em;
   }
-  .dateText {
-    width: 30%;
-    text-align: right;
-    float: right;
+
+  .small {
+    font-size: .9em;
   }
+
   .tiny-text {
     font-size: .8em;
     opacity: .9;
+    margin-right: 5%;
+  } 
+
+  .match[result=win] {
+    /* background: #f37426; */
   }
-  .opponentHeader {
-    width: 70%;
+
+  .match[result=loss] {
+    /* background: #5d26f3; */
   }
-  .deckDisplayBox {
-    font-size: 1em;
+
+  .result-text[result=win] {
+    color: green;
   }
-  .resultBox {
-    text-align: center;
-  }
-  .resultText {
-    font-size: 1.25em;
-  }
-  [result=win] {
-    color: #479761  ;
-  }
-  [result=loss] {
+  .result-text[result=loss] {
     color: red;
   }
-  .rank {
-    font-size: .6em;
-    border: .5px solid;
-    border-radius: 10px;
-    padding: 4px;
-    vertical-align: middle;
-    opacity: .7;
-    margin-left: 3px;
-  }
+
   table {
     font-size: .7em;
     padding-left: 20%;
